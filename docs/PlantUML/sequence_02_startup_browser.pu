@@ -1,0 +1,46 @@
+@startuml "images/sequence_02_startup_browser.png"
+
+!include common.ipu
+
+== inicialización == 
+
+create browser << Browser >>
+[-> browser : nuevo
+
+create rootLevel << BrowserLevel >>
+browser -> rootLevel : nuevo
+
+create ringBellItem << BrowserItem >>
+browser -> ringBellItem : nuevo
+browser -> ringBellItem : configurar acción por defecto
+ringBellItem --> rootLevel : insertar
+
+create timer << QTimer >>
+browser -> timer : nuevo
+browser -> timer : configurar
+timer ->o browser : conectar <b><i>timeout</i></b>
+
+== configuración de sub-árboles de navegación == 
+
+loop por cada módulo de extensión
+	create plugin << IPlugin >>
+	browser -->> plugin : parámetro (módulo de extensión actual)
+	create rootItem << BrowserItem >>
+	browser -> rootItem : nuevo
+	browser -> plugin : obtener árbol de acciones
+	browser -> rootItem : interpretar árbol de acciones
+	rootItem --> plugin : asignar como delegado de navegación
+	rootLevel --> rootItem : asignar como padre
+	rootItem --> rootLevel : insertar
+end
+
+...continúa la inicialización de los demás componentes...
+
+== iniciar ciclo de presentación == 
+
+[-> browser : iniciar
+rootLevel --> browser : asignar como nivel actual
+browser -> timer : asignar intervalo de presentación
+browser -> timer : empezar cuenta de tiempo
+
+@enduml

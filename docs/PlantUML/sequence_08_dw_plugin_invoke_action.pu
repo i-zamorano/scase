@@ -1,0 +1,40 @@
+@startuml "images/sequence_08_dw_plugin_invoke_action.png"
+
+!include common.ipu
+
+participant plugin << DocumentWriterPlugin >>
+
+[-> plugin : invocación de acción
+create actionParts << QStringList >>
+plugin --> actionParts : separar nombre y argumentos
+create methodName << QString >>
+actionParts --> methodName : obtener nombre de la acción
+plugin -> actionParts : quitar primer ítem
+create argumentTable << QGenericArgument[10] >>
+plugin -> argumentTable : nuevo
+create signatureArguments << QStringList >>
+plugin -> signatureArguments : nuevo
+
+loop para cada ítem en <i>actionParts</i>
+	actionParts --> argumentTable : insertar ítem actual como <b><i>QGenericArgument</i></b> de tipo <b><i>QString</i></b>
+	plugin --> signatureArguments : insertar firma del argumento (<b><i>QString</i></b>)
+end
+
+loop para cada posición de <i>argumentTable</i> que no esté inicializada
+	actionParts --> argumentTable : insertar un argumento nulo
+end
+
+create signature << QString >>
+signatureArguments --> signature : construir firma del método
+plugin -> plugin : buscar índice del método a ejecutar según la firma
+
+alt si el método existe en este objeto específico
+	
+	create metaMethod << QMetaMethod >>
+	plugin -> metaMethod : obtener a partir del índice
+	plugin -> metaMethod : invocar con los argumentos almacenados en <b><i>argumentTable</i></b>
+
+end
+
+@enduml
+	

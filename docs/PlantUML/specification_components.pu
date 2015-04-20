@@ -1,0 +1,22 @@
+@startuml "images/specification_components.png"
+
+!include common.ipu
+
+!include specification_components_common.ipu
+
+@enduml
+
+@startuml "images/specification_components_with_interface.png"
+
+!include common.ipu
+
+!include specification_components_common.ipu
+
+!include specification_interfaces.ipu
+
+Plugin --> IPlugin : cumple con
+Browser --> IBrowserDelegate : cumple con
+Plugin --> IBrowserDelegate : necesita
+
+@enduml
+

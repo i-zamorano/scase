@@ -1,0 +1,318 @@
+@startuml "images/implementation.png"
+
+!include common.ipu
+
+package Controller <<Frame>> {
+
+	class MainWindow {
+
+		- PluginHandler pluginHandler 
+		- Browser browser
+		- QStackedWidget zoneFeedback
+		- InteractionWidget zoneInteraction
+		- BrowserPresentationWidget zoneBrowser
+
+		-- slots --
+
+		+ pluginSelected() 
+		+ ringBell()
+
+		-- signals --
+
+		-- methods --
+
+		- setup()
+		- setupInterface() 
+		- setupPlugins()
+
+		-- event listeners --
+
+		- keyPressEvent()
+
+	}
+
+	class BrowserPresentationWidget {
+
+		- QString color
+		- QString backgroundColor
+		- QString backgroundColorSpecial
+		- int fontSize
+
+		-- slots --
+
+		-- signals --
+
+		-- methods --	
+
+		+ setupStyle()
+		+ setup()
+
+		-- IBrowserPresentationDelegate implementation --
+
+		+ setPresentationData()
+
+	}
+
+}
+
+package Browser <<Frame>> {
+
+	class Browser {
+
+		- BROWSER_NAVIGATION_STATUS navigationStatus
+		- BrowserLevel rootLevel
+		- BrowserLevel currentLevel
+		- BrowserItem currentItem
+		- QStack< BrowserLevel > levelStack
+		- BrowserPresentationWidget presentationDelegate
+		- int itemDelay
+		- QTimer timer
+
+		-- slots --
+
+		+ nextItem()
+		+ executeItem()
+		+ stopTimer()
+		+ startTimer()
+
+		-- signals --
+
+		+ pluginSelected()
+		+ executeActionFromPlugin()
+		+ ringBellSignal()
+
+		-- methods --
+
+		+ setup()
+		+ setupPluginTree()
+		+ start()
+		+ ring_bell()
+		+ goToPreviousStop()
+		- readDeploymentTree()
+		- readDeploymentItem()
+		- setCurrentLevel()
+		- updatePresentationDelegate()
+		- goToPreviousLevel()
+
+		-- IBrowserDelegate implementation --
+
+		+ addItemToLevel()
+		+ goToLevel()
+
+	}
+
+	class BrowserLevel {
+
+		- QList< IBrowserItem > items
+		- int currentPosition
+
+		-- IBrowserLevel implementation --
+
+		# IBrowserItem container
+
+		-- slots --
+
+		-- signals --
+
+		-- methods --
+
+		+ insertItem()
+		+ insertItem()
+		+ removeItemAtPos()
+		+ reset()
+		+ next()
+		+ atEnd()
+		+ isStop()
+		+ setIsStop()
+		+ getCurrentItem()
+
+		-- IBrowserLevel implementation -- 
+
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+	class BrowserItem {
+
+		- QString presentationData
+		- QString moduleName
+		- QString actionName
+		- IPlugin pluginDelegate
+
+		-- slots --
+
+		-- signals --
+
+		-- methods --
+
+		+ getPresentationData()
+		+ setPresentationData()
+		+ setAction()
+		+ getActionModule()
+		+ getActionName()
+		+ hasAction()
+		+ getPluginDelegate()
+		+ setPluginDelegate()
+		+ hasPluginDelegate()
+
+		-- IBrowserItem implementation -- 
+
+		+ getLevelBelow()
+		+ setLevelBelow()
+		+ hasLevelBelow()
+		+ isSpecial()
+		+ setIsSpecial()
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+}
+
+package Interaction <<Frame>> {
+
+	class InteractionWidget {
+
+		- int activationDelay
+		- QTime stopwatch
+
+		-- slots --
+
+		-- signals --
+
+		+ userHasEntered()
+		+ userHasLeft()
+		+ activated()
+
+		-- methods --
+
+		+ setActivationDelay()
+		+ getActivationDelay()
+
+		-- event listeners --
+
+		# enterEvent()
+		# leaveEvent()
+
+	}
+
+}
+
+package PluginHandler <<Frame>> {
+
+	class PluginHandler {
+
+		- QHash< QString, IPlugin > directory
+
+		-- slots --
+
+		-- signals --
+
+		+ invokeActionFromPlugin()
+
+		-- methods --
+
+		+ registerPlugin()
+		+ getOutputWidgetFromPlugin()
+
+	}
+
+}
+
+package Interfaces <<Frame>> {
+
+	interface IBrowserDelegate {
+
+		-- methods --
+
+		+ {abstract} addItemToLevel()
+		+ {abstract} goToLevel()
+
+	}
+
+	interface IBrowserLevel {
+
+		# container
+
+		-- methods --
+
+		+ {abstract} insertItem()
+		+ {abstract} insertItem()
+		+ {abstract} removeItemAtPos()
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+	interface IBrowserItem {
+
+		# bool isSpecial_
+		# IBrowserLevel container
+		# IBrowserLevel levelBelow_
+
+		-- methods -- 
+
+		+ {abstract} getPresentationData()
+		+ {abstract} setPresentationData()
+		+ {abstract} setAction()
+		+ {abstract} getActionModule()
+		+ {abstract} getActionName()
+		+ getLevelBelow()
+		+ setLevelBelow()
+		+ hasLevelBelow()
+		+ isSpecial()
+		+ setIsSpecial()
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+	interface IPlugin {
+
+		- IBrowserItem browserItemDelegate
+		- IBrowserDelegate browserDelegate
+
+		--  methods --
+
+		+ {abstract} invokeAction()
+		+ {abstract} getBrowserTree()
+		+ {abstract} getOutputWidget()
+		+ {abstract} getName()
+		+ {abstract} getPluginPath()
+		+ {abstract} setupOutputWidget()
+		+ setBrowserItemDelegate()
+
+	}
+
+	interface IBrowserPresentationDelegate {
+
+		-- methods --
+
+		+ {abstract} setPresentationData()
+
+	}
+
+}
+
+MainWindow -- Browser : usa >
+Browser *-- "2" BrowserLevel : contiene >
+BrowserLevel *-- "1..*" BrowserItem : contiene >
+BrowserItem *-- "1" BrowserLevel : es contenido por >
+BrowserLevel *-- "0..1" BrowserItem : es contenido por >
+Browser -- BrowserPresentationWidget : usa >
+
+MainWindow -- InteractionWidget : usa >
+MainWindow -- PluginHandler : usa >
+MainWindow -- BrowserPresentationWidget : usa >
+
+Browser --> IBrowserDelegate : implementa >
+BrowserLevel --> IBrowserLevel : implementa >
+BrowserItem --> IBrowserItem : implementa >
+BrowserPresentationWidget --> IBrowserPresentationDelegate : implementa >
+
+PluginHandler *.. "0..*" IPlugin : contiene >
+IPlugin *.. "1" IBrowserDelegate : usa >
+IPlugin *.. "1" IBrowserItem : usa >
+
+@enduml

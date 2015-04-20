@@ -1,0 +1,70 @@
+@startuml "images/sequence_05_interaction.png"
+
+!include common.ipu
+
+participant mainWindow << MainWindow >>
+participant zoneInteraction << InteractionWidget >>
+participant browser << Browser >>
+participant pluginHandler << PluginHandler >>
+
+mainWindow -->o zoneInteraction : enviar <b><i>enterEvent</i></b>
+zoneInteraction -> zoneInteraction : empezar cuenta de tiempo
+zoneInteraction -->o browser : enviar <b><i>userHasEntered</i></b>
+browser -> browser : detener cuenta de tiempo
+
+mainWindow -->o zoneInteraction : enviar <b><i>leaveEvent</i></b>
+
+alt si el tiempo de <i>stopwatch</i> es mayor que el tiempo de permanencia configurado
+
+	zoneInteraction -->o browser : enviar <b><i>activated</i></b>
+
+	alt si el estado es lectura de ítems del árbol
+
+		alt si el ítem actual es contenedor de un nivel inferior
+
+			alt si el ítem actual tiene un delegado de módulo de extensión
+
+				browser -->o mainWindow : enviar <b><i>pluginSelected</i></b>
+				create selectedPlugin << IPlugin >>
+				mainWindow -->> selectedPlugin : parámetro (módulo de extensión seleccionado)
+				create outputWidget << QWidget >>
+				selectedPlugin --> outputWidget : obtener elemento de presentación
+				outputWidget --> mainWindow : asignar como elemento de presentación actual
+				mainWindow -> outputWidget : hacer visible
+				selectedPlugin -> outputWidget : configurar
+
+			end
+
+			browser --> browser : ir al nivel inferior
+
+		else el ítem actual es un contenedor de acción
+
+			alt si es la acción por defecto
+
+				browser -->o mainWindow : enviar <b><i>ringBellSignal</i></b>
+				browser -> browser : empezar cuenta de tiempo
+
+			else si es una acción externa
+
+				browser -->o pluginHandler : enviar <b><i>executeActionFromPlugin</i></b>
+
+			end
+
+		end
+
+	else el estado es lectura de pseudo-ítems
+
+		browser --> browser : ir al nivel superior
+		browser -> browser : empezar cuenta de tiempo
+
+	end
+
+else el tiempo es menor
+
+	zoneInteraction -->o browser : enviar <b><i>userHasLeft</i></b>
+	browser -> browser : empezar cuenta de tiempo
+
+end
+
+@enduml
+	

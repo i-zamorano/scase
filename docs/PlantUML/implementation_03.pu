@@ -1,0 +1,147 @@
+@startuml "images/implementation_03.png"
+
+!include common.ipu
+
+skinparam class {
+	FontSize FONT_SIZE_BIG
+	AttributeFontSize FONT_SIZE_BIG
+}
+
+left to right direction
+
+rotate
+
+package Browser <<Frame>> {
+
+
+	class BrowserLevel {
+
+		- QList< IBrowserItem > items
+		- int currentPosition
+
+		-- IBrowserLevel implementation --
+
+		# IBrowserItem container
+
+		-- slots --
+
+		-- signals --
+
+		-- methods --
+
+		+ insertItem()
+		+ insertItem()
+		+ removeItemAtPos()
+		+ reset()
+		+ next()
+		+ atEnd()
+		+ isStop()
+		+ setIsStop()
+		+ getCurrentItem()
+
+		-- IBrowserLevel implementation -- 
+
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+	class Browser {
+
+		- BROWSER_NAVIGATION_STATUS navigationStatus
+		- BrowserLevel rootLevel
+		- BrowserLevel currentLevel
+		- BrowserItem currentItem
+		- QStack< BrowserLevel > levelStack
+		- BrowserPresentationWidget presentationDelegate
+		- int itemDelay
+		- QTimer timer
+
+		-- slots --
+
+		+ nextItem()
+		+ executeItem()
+		+ stopTimer()
+		+ startTimer()
+
+		-- signals --
+
+		+ pluginSelected()
+		+ executeActionFromPlugin()
+		+ ringBellSignal()
+
+		-- methods --
+
+		+ setup()
+		+ setupPluginTree()
+		+ start()
+		+ ring_bell()
+		+ goToPreviousStop()
+		- readDeploymentTree()
+		- readDeploymentItem()
+		- setCurrentLevel()
+		- updatePresentationDelegate()
+		- goToPreviousLevel()
+
+		-- IBrowserDelegate implementation --
+
+		+ addItemToLevel()
+		+ goToLevel()
+
+	}
+
+	class BrowserItem {
+
+		- QString presentationData
+		- QString moduleName
+		- QString actionName
+		- IPlugin pluginDelegate
+
+		-- slots --
+
+		-- signals --
+
+		-- methods --
+
+		+ getPresentationData()
+		+ setPresentationData()
+		+ setAction()
+		+ getActionModule()
+		+ getActionName()
+		+ hasAction()
+		+ getPluginDelegate()
+		+ setPluginDelegate()
+		+ hasPluginDelegate()
+
+		-- IBrowserItem implementation -- 
+
+		+ getLevelBelow()
+		+ setLevelBelow()
+		+ hasLevelBelow()
+		+ isSpecial()
+		+ setIsSpecial()
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+}
+
+class MainWindow
+class BrowserPresentationWidget
+interface IBrowserDelegate
+interface IBrowserLevel
+interface IBrowserItem
+
+MainWindow -- Browser : usa >
+Browser *-- "2" BrowserLevel : contiene >
+BrowserLevel *-- "1..*" BrowserItem : contiene >
+BrowserItem *-- "1" BrowserLevel : es contenido por >
+BrowserLevel *-- "0..1" BrowserItem : es contenido por >
+Browser -- BrowserPresentationWidget : usa >
+
+Browser --> IBrowserDelegate : implementa >
+BrowserLevel --> IBrowserLevel : implementa >
+BrowserItem --> IBrowserItem : implementa >
+
+@enduml

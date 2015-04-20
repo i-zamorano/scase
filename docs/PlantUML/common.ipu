@@ -1,0 +1,60 @@
+!define BACKGROUND_COLOR #FFFFFF
+!define FOREGROUND_COLOR #000000
+!define FONT_SIZE_BIG 14
+!define FONT_SIZE 12
+!define FONT_SIZE_SMALL 10
+!define FONT_FAMILY Arial
+
+skinparam monochrome true
+skinparam shadowing false
+
+skinparam component {
+	FontSize FONT_SIZE
+	FontName FONT_FAMILY
+	InterfaceBackgroundColor BACKGROUND_COLOR
+	InterfaceBorderColor FOREGROUND_COLOR
+	BackgroundColor BACKGROUND_COLOR
+	BorderColor FOREGROUND_COLOR
+	ArrowFontName FONT_FAMILY
+	ArrowColor FOREGROUND_COLOR
+	ArrowFontColor FOREGROUND_COLOR
+	Style uml2
+}
+
+skinparam class {
+	FontSize FONT_SIZE
+	FontName FONT_FAMILY
+	InterfaceBackgroundColor BACKGROUND_COLOR
+	InterfaceBorderColor FOREGROUND_COLOR
+	BackgroundColor BACKGROUND_COLOR
+	BorderColor FOREGROUND_COLOR
+	ArrowFontName FONT_FAMILY
+	ArrowColor FOREGROUND_COLOR
+	ArrowFontColor FOREGROUND_COLOR
+	AttributeFontColor FOREGROUND_COLOR
+	AttributeFontSize FONT_SIZE_SMALL
+	AttributeFontName FONT_FAMILY
+	Style uml2
+}
+
+skinparam package {
+	FontSize FONT_SIZE_BIG
+	FontName FONT_FAMILY	
+}
+
+skinparam sequence {
+	FontSize FONT_SIZE
+	FontName FONT_FAMILY
+	InterfaceBackgroundColor BACKGROUND_COLOR
+	InterfaceBorderColor FOREGROUND_COLOR
+	BackgroundColor BACKGROUND_COLOR
+	BorderColor FOREGROUND_COLOR
+	ArrowFontName FONT_FAMILY
+	ArrowColor FOREGROUND_COLOR
+	ArrowFontColor FOREGROUND_COLOR
+	AttributeFontColor FOREGROUND_COLOR
+	AttributeFontSize FONT_SIZE_SMALL
+	AttributeFontName FONT_FAMILY
+	BoxBackgroundColor BACKGROUND_COLOR
+	Style uml2
+}

@@ -1,0 +1,23 @@
+@startuml "images/sequence_07_startup_dw_plugin.png"
+
+!include common.ipu
+
+== configuración == 
+create plugin << DocumentWriterPlugin >>
+[-> plugin : nuevo
+create settings << QSettings >>
+plugin -> settings : nuevo
+plugin -> settings : leer configuración
+create presentationWidget << DWPTextEdit >>
+plugin -> presentationWidget : nuevo
+plugin -> presentationWidget : configuración básica
+
+... continúa la inicialización de los demás módulos ...
+
+== configuración del elemento de presentación ==
+
+[-> plugin : solicitud de configuración elemento de presentación
+plugin -> plugin : calcular valores
+plugin --> presentationWidget : asignar valores calculados
+
+@enduml

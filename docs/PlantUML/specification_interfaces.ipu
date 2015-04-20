@@ -1,0 +1,2 @@
+interface "Interfaz de conexión de árbol de navegación" as IBrowserDelegate
+interface "Interfaz de módulo de extensión" as IPlugin

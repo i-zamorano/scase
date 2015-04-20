@@ -1,0 +1,37 @@
+@startuml "images/sequence_04_presentation_loop.png"
+
+!include common.ipu
+
+participant browser << Browser >>
+participant timer << QTimer >>
+participant currentLevel << BrowserLevel >>
+participant currentItem << BrowserItem >>
+participant presentationDelegate << BrowserPresentationWidget >>
+
+timer -->o browser : enviar <b><i>timeout</i></b>
+browser -> timer : detener
+browser -> currentLevel : avanzar
+currentLevel --> currentItem : obtener item actual
+
+alt si no hay item actual
+	alt si está en la raíz
+		browser -> browser : volver al inicio del nivel raíz
+	else no está en la raíz
+		alt si el estado es lectura de ítems del árbol
+			browser -> browser : cambiar estado a lectura de pseudo-ítems
+		else el estado es lectura de pseudo-ítems
+			browser -> browser : cambiar estado a lectura de ítems del árbol
+			browser -> browser : volver al inicio del nivel raíz
+		end
+	end
+end
+
+alt si el estado es lectura de ítems del árbol
+	currentItem --> presentationDelegate : actualizar información
+else el estado es lectura de pseudo-ítems
+	browser --> presentationDelegate : actualizar con información de pseudo-ítem
+end
+
+browser -> timer : empezar cuenta de tiempo
+
+@enduml

@@ -1,0 +1,101 @@
+@startuml "images/implementation_02.png"
+
+!include common.ipu
+
+skinparam class {
+	FontSize FONT_SIZE
+	AttributeFontSize FONT_SIZE
+}
+
+package Interfaces <<Frame>> {
+
+	interface IBrowserDelegate {
+
+		-- methods --
+
+		+ {abstract} addItemToLevel()
+		+ {abstract} goToLevel()
+
+	}
+
+	interface IBrowserLevel {
+
+		# container
+
+		-- methods --
+
+		+ {abstract} insertItem()
+		+ {abstract} insertItem()
+		+ {abstract} removeItemAtPos()
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+	interface IBrowserItem {
+
+		# bool isSpecial_
+		# IBrowserLevel container
+		# IBrowserLevel levelBelow_
+
+		-- methods -- 
+
+		+ {abstract} getPresentationData()
+		+ {abstract} setPresentationData()
+		+ {abstract} setAction()
+		+ {abstract} getActionModule()
+		+ {abstract} getActionName()
+		+ getLevelBelow()
+		+ setLevelBelow()
+		+ hasLevelBelow()
+		+ isSpecial()
+		+ setIsSpecial()
+		+ setContainer()
+		+ getContainer()
+
+	}
+
+	interface IPlugin {
+
+		- IBrowserItem browserItemDelegate
+		- IBrowserDelegate browserDelegate
+
+		--  methods --
+
+		+ {abstract} invokeAction()
+		+ {abstract} getBrowserTree()
+		+ {abstract} getOutputWidget()
+		+ {abstract} getName()
+		+ {abstract} getPluginPath()
+		+ {abstract} setupOutputWidget()
+		+ setBrowserItemDelegate()
+
+	}
+
+	interface IBrowserPresentationDelegate {
+
+		-- methods --
+
+		+ {abstract} setPresentationData()
+
+	}
+
+}
+
+class BrowserPresentationWidget
+class Browser
+class BrowserLevel
+class BrowserItem
+class PluginHandler
+
+Browser --> IBrowserDelegate : implementa >
+BrowserLevel --> IBrowserLevel : implementa >
+BrowserItem --> IBrowserItem : implementa >
+BrowserPresentationWidget --> IBrowserPresentationDelegate : implementa >
+
+PluginHandler *.. "0..*" IPlugin : contiene >
+IPlugin *.. "1" IBrowserDelegate : usa >
+IPlugin *.. "1" IBrowserItem : usa >
+
+
+@enduml

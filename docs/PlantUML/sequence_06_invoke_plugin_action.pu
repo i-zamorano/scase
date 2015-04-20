@@ -1,0 +1,20 @@
+@startuml "images/sequence_06_invoke_plugin_action.png"
+
+!include common.ipu
+
+participant browser << Browser >>
+participant pluginHandler << PluginHandler >>
+participant plugin << IPlugin >>
+
+browser -->o pluginHandler : enviar <b><i>executeActionFromPlugin</i></b>
+pluginHandler -> pluginHandler : verificar que el módulo de extensión solicitado exista
+
+alt si el módulo de extensión existe
+
+	pluginHandler -> plugin : invocar acción
+	note right : el proceso específico depende del módulo de extensión,\nal igual que el reinicio del ciclo de presentación
+
+end
+
+@enduml
+	

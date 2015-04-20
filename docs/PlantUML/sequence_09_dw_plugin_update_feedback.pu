@@ -1,0 +1,15 @@
+@startuml "images/sequence_09_dw_plugin_update_feedback.png"
+
+!include common.ipu
+
+participant plugin << DocumentWriterPlugin >>
+participant browserDelegate << IBrowserDelegate >>
+
+alt si el módulo tiene un nivel raíz asociado
+
+	plugin -> browserDelegate : ir al nivel raíz del módulo
+
+end
+
+@enduml
+	

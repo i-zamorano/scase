@@ -1,0 +1,19 @@
+MainWindow -- Browser : usa >
+Browser *-- "2" BrowserLevel : contiene >
+BrowserLevel *-- "1..*" BrowserItem : contiene >
+BrowserItem *-- "1" BrowserLevel : es contenido por >
+BrowserLevel *-- "0..1" BrowserItem : es contenido por >
+Browser -- BrowserPresentationWidget : usa >
+
+MainWindow -- InteractionWidget : usa >
+MainWindow -- PluginHandler : usa >
+MainWindow -- BrowserPresentationWidget : usa >
+
+Browser --> IBrowserDelegate : implementa >
+BrowserLevel --> IBrowserLevel : implementa >
+BrowserItem --> IBrowserItem : implementa >
+BrowserPresentationWidget --> IBrowserPresentationDelegate : implementa >
+
+PluginHandler *.. "0..*" IPlugin : contiene >
+IPlugin *.. "1" IBrowserDelegate : usa >
+IPlugin *.. "1" IBrowserItem : usa >

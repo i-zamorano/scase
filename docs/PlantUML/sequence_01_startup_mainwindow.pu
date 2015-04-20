@@ -1,0 +1,57 @@
+@startuml "images/sequence_01_startup_mainwindow.png"
+
+!include common.ipu
+
+== configuración == 
+
+create mainWindow << MainWindow >>
+[-> mainWindow : nuevo
+mainWindow -> mainWindow : ajustar tamaño a la pantalla
+create settings << QSettings >>
+mainWindow -> settings : nuevo
+mainWindow -> settings : leer configuración
+
+== creación de árbol de navegación == 
+
+create browser << Browser >>
+mainWindow -> browser : nuevo
+
+== creación de elementos de presentación == 
+
+create zoneFeedback << QStackedWidget >>
+mainWindow -> zoneFeedback : nuevo
+mainWindow -> zoneFeedback : configurar
+
+create zoneBrowser << BrowserPresentationWidget >>
+mainWindow -> zoneBrowser : nuevo
+mainWindow -> zoneBrowser : configurar
+
+== creación de elemento de interacción == 
+
+create zoneInteraction << InteractionWidget >>
+mainWindow -> zoneInteraction : nuevo
+mainWindow -> zoneInteraction : configurar
+
+zoneInteraction ->o  browser : conectar <b><i>activated</i></b>
+zoneInteraction ->o  browser : conectar <b><i>userHasEntered</i></b>
+zoneInteraction ->o  browser : conectar <b><i>userHasLeft</i></b>
+
+== carga de módulos de extensión == 
+
+create pluginHandler << PluginHandler >>
+mainWindow -> pluginHandler : nuevo
+
+browser ->o pluginHandler : conectar <b><i>executeActionFromPlugin</i></b>
+browser ->o pluginHandler : conectar <b><i>pluginSelected</i></b>
+
+mainWindow -> pluginHandler : configurar módulos de extensión
+
+browser -> mainWindow : conectar <b><i>ringBellSignal</i></b>
+
+== iniciar ciclo de presentación == 
+
+zoneBrowser -> browser : asignar como delegado de presentación
+mainWindow -> browser : configurar tiempo de presentación por acción
+mainWindow -> browser : iniciar
+
+@enduml

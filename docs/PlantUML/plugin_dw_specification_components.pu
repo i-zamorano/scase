@@ -1,0 +1,18 @@
+@startuml "images/specification_components_dw_plugin.png"
+
+!include common.ipu
+
+scale 2.0
+
+[Escritor] as DocumentWriterPlugin
+[Elemento de retroalimentación] as DWPTextEdit
+[Conector con árbol de navegación] as BrowserDelegate
+
+!include specification_interfaces.ipu
+
+DocumentWriterPlugin ..> DWPTextEdit : usa
+DocumentWriterPlugin ..> BrowserDelegate : usa
+DocumentWriterPlugin --> IPlugin : cumple con
+BrowserDelegate --> IBrowserDelegate : cumple con
+
+@enduml

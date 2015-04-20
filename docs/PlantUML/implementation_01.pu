@@ -1,0 +1,128 @@
+@startuml "images/implementation_01.png"
+
+!include common.ipu
+
+skinparam class {
+	FontSize FONT_SIZE
+	AttributeFontSize FONT_SIZE
+}
+
+package Controller <<Frame>> {
+
+	class MainWindow {
+
+		- PluginHandler pluginHandler 
+		- Browser browser
+		- QStackedWidget zoneFeedback
+		- InteractionWidget zoneInteraction
+		- BrowserPresentationWidget zoneBrowser
+
+		-- slots --
+
+		+ pluginSelected() 
+		+ ringBell()
+
+		-- signals --
+
+		-- methods --
+
+		- setup()
+		- setupInterface() 
+		- setupPlugins()
+
+		-- event listeners --
+
+		- keyPressEvent()
+
+	}
+
+	class BrowserPresentationWidget {
+
+		- QString color
+		- QString backgroundColor
+		- QString backgroundColorSpecial
+		- int fontSize
+
+		-- slots --
+
+		-- signals --
+
+		-- methods --	
+
+		+ setupStyle()
+		+ setup()
+
+		-- IBrowserPresentationDelegate implementation --
+
+		+ setPresentationData()
+
+	}
+
+}
+
+package Interaction <<Frame>> {
+
+	class InteractionWidget {
+
+		- int activationDelay
+		- QTime stopwatch
+
+		-- slots --
+
+		-- signals --
+
+		+ userHasEntered()
+		+ userHasLeft()
+		+ activated()
+
+		-- methods --
+
+		+ setActivationDelay()
+		+ getActivationDelay()
+
+		-- event listeners --
+
+		# enterEvent()
+		# leaveEvent()
+
+	}
+
+}
+
+package PluginHandler <<Frame>> {
+
+	class PluginHandler {
+
+		- QHash< QString, IPlugin > directory
+
+		-- slots --
+
+		-- signals --
+
+		+ invokeActionFromPlugin()
+
+		-- methods --
+
+		+ registerPlugin()
+		+ getOutputWidgetFromPlugin()
+
+	}
+
+}
+
+class Browser
+interface IPlugin
+interface IBrowserPresentationDelegate 
+
+MainWindow -- Browser : usa >
+Browser -- BrowserPresentationWidget : usa >
+
+MainWindow -- InteractionWidget : usa >
+MainWindow -- PluginHandler : usa >
+MainWindow -- BrowserPresentationWidget : usa >
+
+BrowserPresentationWidget --> IBrowserPresentationDelegate : implementa >
+
+PluginHandler *.. "0..*" IPlugin : contiene >
+
+@enduml

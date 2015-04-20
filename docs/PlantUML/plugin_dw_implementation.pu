@@ -1,0 +1,63 @@
+@startuml "images/implementation_dw_plugin.png"
+
+!include common.ipu
+
+class DocumentWriterPlugin {
+
+	- DWPTextEdit presentationWidget
+	- IBrowserLevel rootLevel
+	- IBrowserItem browserItemDelegate
+	- IBrowserDelegate browserDelegate
+
+	-- slots --
+
+	-- signals --
+
+	-- methods --
+
+	- updatePresentationWidget()
+	- updateRootLevel()
+	- delete_content()
+
+	-- invokable --
+
+	- write()
+	- write_special()
+	- delete_previous_character()
+	- delete_previous_word()
+	- delete_all()
+	- undo()
+	- move_cursor()
+
+	-- IPlugin implementation --
+
+	+ getBrowserTree()
+	+ getOutputWidget()
+	+ getName()
+	+ getPluginPath()
+	+ setupOutputWidget()
+	+ invokeAction()
+	+ setBrowserItemDelegate() 
+	+ setBrowserDelegate ()
+}
+
+class DWPTextEdit {
+
+	-- slots --
+
+	-- signals --
+
+	-- methods --	
+
+	-- event listeners --
+
+	- keyPressEvent()
+}
+
+DocumentWriterPlugin -- "1" DWPTextEdit : usa >
+DocumentWriterPlugin --() IPlugin : instancia
+DocumentWriterPlugin --() IBrowserLevel : tiene asociado
+DocumentWriterPlugin --() IBrowserItem : tiene asociado
+DocumentWriterPlugin --() IBrowserDelegate : usa
+
+@enduml

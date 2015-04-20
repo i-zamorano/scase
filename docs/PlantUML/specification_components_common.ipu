@@ -1,0 +1,13 @@
+scale 2.0
+
+[Controlador] as MainWindow
+[Navegador] as Browser
+[Elemento de interacción] as ZoneInteraction
+[Manejador de módulos de extensión] as PluginHandler
+[Módulos de extensión] as Plugin
+
+MainWindow ..> ZoneInteraction : usa
+MainWindow ..> Browser : usa
+MainWindow ..> PluginHandler : usa
+PluginHandler ..> Plugin : carga
+PluginHandler ..> Browser : informa al
