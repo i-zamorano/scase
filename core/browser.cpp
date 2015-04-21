@@ -95,7 +95,7 @@ void Browser::executeItem() {
                     qDebug() << "Browser:executeItem:hasAction:" << currentItem->getActionModule() << "," << currentItem->getActionName();
 #endif
                     if (currentItem->getActionModule() == SCASE1_MODULE_BROWSER) {
-                        QMetaObject::invokeMethod(this, currentItem->getActionName().toAscii().constData());
+                        QMetaObject::invokeMethod(this, currentItem->getActionName().toLatin1().constData());
                         startTimer();
                     } else {
                         emit executeActionFromPlugin(currentItem->getActionModule(), currentItem->getActionName());

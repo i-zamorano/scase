@@ -18,7 +18,7 @@
 
 DocumentWriterPlugin::DocumentWriterPlugin()
 {
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     browserItemDelegate = NULL;
     rootLevel = NULL;
@@ -165,7 +165,7 @@ bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
         qDebug() << "signature:" << signature;
 #endif
 
-        int methodIndex = metaObject()->indexOfMethod(signature.toAscii().constData());
+        int methodIndex = metaObject()->indexOfMethod(signature.toLatin1().constData());
 
         if (methodIndex > -1) {
             QMetaMethod metaMethod = metaObject()->method(methodIndex);
@@ -368,4 +368,4 @@ void DocumentWriterPlugin::updatePresentationWidget() {
     presentationWidget->setTextCursor(cursor);
 }
 
-Q_EXPORT_PLUGIN2(DocumentWriterPlugin, DocumentWriterPlugin)
+//Q_EXPORT_PLUGIN2(DocumentWriterPlugin, DocumentWriterPlugin)

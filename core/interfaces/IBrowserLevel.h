@@ -4,7 +4,7 @@
 // TODO: CLEAN UP INTERFACE (MAKE DELEGATES?)
 
 #include <QObject>
-#include <QPlugin.h>
+#include <QtPlugin>
 
 class IBrowserLevel;
 
