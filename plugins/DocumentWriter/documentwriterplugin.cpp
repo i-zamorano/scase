@@ -181,7 +181,12 @@ bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
 }
 
 QString DocumentWriterPlugin::getBrowserTree() {
-    QFile xmlBrowserTree(getPluginPath() + SCASE1_PLUGIN_DOCUMENTWRITER_BROWSER_TREE_FILE + ".xml");
+    QString browserTreeFile = getPluginPath() + "lang/" + settings->value("presentation/language", "en").toString().trimmed() + "/" + SCASE1_PLUGIN_DOCUMENTWRITER_BROWSER_TREE_FILE + ".xml";
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "browserTreeFile:" << browserTreeFile;
+#endif
+
+    QFile xmlBrowserTree(browserTreeFile);
 
     if (!xmlBrowserTree.open(QIODevice::ReadOnly)) {
         return "";
