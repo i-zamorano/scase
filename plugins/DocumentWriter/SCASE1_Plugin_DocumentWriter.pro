@@ -19,7 +19,7 @@ debug {
     DEFINES += SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
 }
 
-INCLUDEPATH += ../SCASE1
+INCLUDEPATH += ../../core
 
 SOURCES += documentwriterplugin.cpp \
     dwptextedit.cpp

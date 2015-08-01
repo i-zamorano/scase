@@ -3,7 +3,7 @@
 
 // TODO: CLEAN UP INTERFACE (MAKE DELEGATES?)
 
-#include <QPlugin.h>
+#include <QtPlugin>
 
 class IBrowserItem;
 

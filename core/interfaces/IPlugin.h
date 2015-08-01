@@ -1,7 +1,7 @@
 #ifndef IPLUGIN_H
 #define IPLUGIN_H
 
-#include <QPlugin.h>
+#include <QtPlugin>
 #include <QMetaObject>
 #include <QWidget>
 #include <QVariant>

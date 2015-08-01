@@ -2,6 +2,7 @@
 #define IBROWSERPRESENTATIONDELEGATE_H
 
 #include <QString>
+#include <QtPlugin>
 
 class IBrowserPresentationDelegate {
 

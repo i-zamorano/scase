@@ -6,6 +6,7 @@
 #include <QList>
 #include <QRegExp>
 #include <QSettings>
+#include <QtPlugin>
 
 #include "scase1_plugin_documentwriter_global.h"
 
@@ -18,6 +19,7 @@
 class SCASE1_PLUGIN_DOCUMENTWRITERSHARED_EXPORT DocumentWriterPlugin : public QObject, public IPlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID SCASE1_PLUGIN_DOCUMENTWRITER_NAME)
     Q_INTERFACES(IPlugin)
 
 public:

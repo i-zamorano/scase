@@ -1,0 +1,247 @@
+<item name='ESCRIBIR'>
+	<level>
+		<item name='ESPACIO'>
+			<action>write_special,space</action>
+		</item>
+		<item name="LETRAS Y NÚMEROS">
+			<level>
+				<item name='VOCALES SIN TILDE'>
+					<level>
+						<item name='A'>
+							<action>write,A</action>
+						</item>
+						<item name='E'>
+							<action>write,E</action>
+						</item>
+						<item name='I'>
+							<action>write,I</action>
+						</item>
+						<item name='O'>
+							<action>write,O</action>
+						</item>
+						<item name='U'>
+							<action>write,U</action>
+						</item>
+					</level>
+				</item>
+				<item name='VOCALES CON TILDE O DIÉRESIS'>
+					<level>
+						<item name='Á'>
+							<action>write,Á</action>
+						</item>
+						<item name='É'>
+							<action>write,É</action>
+						</item>
+						<item name='Í'>
+							<action>write,Í</action>
+						</item>
+						<item name='Ó'>
+							<action>write,Ó</action>
+						</item>
+						<item name='Ú'>
+							<action>write,Ú</action>
+						</item>
+						<item name='Ü'>
+							<action>write,Ü</action>
+						</item>
+					</level>
+				</item>
+				<item name='CONSONANTES'>
+					<level>
+						<item name='B, C, D, F, G'>
+							<level>
+								<item name="B">
+									<action>write,B</action>
+								</item>
+								<item name="C">
+									<action>write,C</action>
+								</item>
+								<item name="D">
+									<action>write,D</action>
+								</item>
+								<item name="F">
+									<action>write,F</action>
+								</item>
+								<item name="G">
+									<action>write,G</action>
+								</item>
+							</level>
+						</item>
+						<item name="H, J, K, L, M, N">
+							<level>
+								<item name="H">
+									<action>write,H</action>
+								</item>
+								<item name="J">
+									<action>write,J</action>
+								</item>
+								<item name="K">
+									<action>write,K</action>
+								</item>
+								<item name="L">
+									<action>write,L</action>
+								</item>
+								<item name="M">
+									<action>write,M</action>
+								</item>
+								<item name="N">
+									<action>write,N</action>
+								</item>
+							</level>
+						</item>
+						<item name="Ñ, P, Q, R, S, T">
+							<level>
+								<item name="Ñ">
+									<action>write,Ñ</action>
+								</item>
+								<item name="P">
+									<action>write,P</action>
+								</item>
+								<item name="Q">
+									<action>write,Q</action>
+								</item>
+								<item name="R">
+									<action>write,R</action>
+								</item>
+								<item name="S">
+									<action>write,S</action>
+								</item>
+								<item name="T">
+									<action>write,T</action>
+								</item>
+							</level>
+						</item>
+						<item name="V, W, X, Y, Z">
+							<level>
+								<item name="V">
+									<action>write,V</action>
+								</item>
+								<item name="W">
+									<action>write,W</action>
+								</item>
+								<item name="X">
+									<action>write,X</action>
+								</item>
+								<item name="Y">
+									<action>write,Y</action>
+								</item>
+								<item name="Z">
+									<action>write,Z</action>
+								</item>
+							</level>
+						</item>
+					</level>
+				</item>
+				<item name='NÚMEROS'>
+					<level>
+						<item name='0, 1, 2, 3, 4'>
+							<level>
+								<item name='0'>
+									<action>write,0</action>
+								</item>
+								<item name='1'>
+									<action>write,1</action>
+								</item>
+								<item name='2'>
+									<action>write,2</action>
+								</item>
+								<item name='3'>
+									<action>write,3</action>
+								</item>
+								<item name='4'>
+									<action>write,4</action>
+								</item>
+							</level>
+						</item>
+						<item name="5 ,6, 7, 8, 9">
+							<level>
+								<item name='5'>
+									<action>write,5</action>
+								</item>
+								<item name='6'>
+									<action>write,6</action>
+								</item>
+								<item name='7'>
+									<action>write,7</action>
+								</item>
+								<item name='8'>
+									<action>write,8</action>
+								</item>
+								<item name='9'>
+									<action>write,9</action>
+								</item>
+							</level>
+						</item>
+					</level>
+				</item>
+			</level>
+		</item>
+		<item name='BORRAR LETRA'>
+			<action>delete_previous_character</action>
+		</item>
+		<item name='PUNTUACIÓN'>
+			<level>
+				<item name='. (punto)'>
+					<action>write_special,period</action>
+				</item>
+				<item name=', (coma)'>
+					<action>write_special,comma</action>
+				</item>
+				<item name='; (punto y coma)'>
+					<action>write_special,semicolon</action>
+				</item>
+				<item name=': (dos puntos)'>
+					<action>write_special,colon</action>
+				</item>
+				<item name='... (puntos suspensivos)'>
+					<action>write_special,period,3</action>
+				</item>
+			</level>
+		</item>
+		<item name='DESHACER'>
+			<action>undo</action>
+		</item>
+		<item name='EDICIÓN'>
+			<level>
+				<item name='SALTO DE LÍNEA'>
+					<action>write_special,enter</action>
+				</item>
+				<item name='TABULADOR'>
+					<action>write_special,tab</action>
+				</item>
+				<item name="MOVER CURSOR">
+					<level>
+						<item name="IZQUIERDA">
+							<action>move_cursor,left,character</action>
+						</item>
+						<item name="DERECHA">
+							<action>move_cursor,right,character</action>
+						</item>
+						<item name="ARRIBA">
+							<action>move_cursor,up</action>
+						</item>
+						<item name="ABAJO">
+							<action>move_cursor,down</action>
+						</item>
+						<item name="IZQUIERDA UNA PALABRA">
+							<action>move_cursor,left,word</action>
+						</item>
+						<item name="DERECHA UNA PALABRA">
+							<action>move_cursor,right,word</action>
+						</item>
+					</level>
+				</item>
+				<item name='BORRAR PALABRA ANTERIOR'>
+					<action>delete_previous_word</action>
+				</item>
+				<item name='BORRAR TODO'>
+					<level>
+						<item name="ESTOY SEGURO DE BORRAR TODO EL TEXTO">
+							<action>delete_all</action>
+						</item>
+					</level>
+				</item>
+			</level>
+		</item>
+	</level>
+</item>

@@ -18,7 +18,7 @@
 
 DocumentWriterPlugin::DocumentWriterPlugin()
 {
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+    QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
     browserItemDelegate = NULL;
     rootLevel = NULL;
@@ -118,7 +118,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 }
 
 QString DocumentWriterPlugin::getPluginPath() {
-    return QCoreApplication::applicationDirPath() + QString("/plugins/");
+    return QString("plugins/");
 }
 
 bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
@@ -165,7 +165,7 @@ bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
         qDebug() << "signature:" << signature;
 #endif
 
-        int methodIndex = metaObject()->indexOfMethod(signature.toAscii().constData());
+        int methodIndex = metaObject()->indexOfMethod(signature.toLatin1().constData());
 
         if (methodIndex > -1) {
             QMetaMethod metaMethod = metaObject()->method(methodIndex);
@@ -181,7 +181,12 @@ bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
 }
 
 QString DocumentWriterPlugin::getBrowserTree() {
-    QFile xmlBrowserTree(getPluginPath() + SCASE1_PLUGIN_DOCUMENTWRITER_BROWSER_TREE_FILE + ".xml");
+    QString browserTreeFile = getPluginPath() + "lang/" + settings->value("presentation/language", "en").toString().trimmed() + "/" + SCASE1_PLUGIN_DOCUMENTWRITER_BROWSER_TREE_FILE + ".xml";
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "browserTreeFile:" << browserTreeFile;
+#endif
+
+    QFile xmlBrowserTree(browserTreeFile);
 
     if (!xmlBrowserTree.open(QIODevice::ReadOnly)) {
         return "";
@@ -368,4 +373,4 @@ void DocumentWriterPlugin::updatePresentationWidget() {
     presentationWidget->setTextCursor(cursor);
 }
 
-Q_EXPORT_PLUGIN2(DocumentWriterPlugin, DocumentWriterPlugin)
+//Q_EXPORT_PLUGIN2(DocumentWriterPlugin, DocumentWriterPlugin)
