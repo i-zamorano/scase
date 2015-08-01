@@ -118,7 +118,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 }
 
 QString DocumentWriterPlugin::getPluginPath() {
-    return QString("plugins/"); //QCoreApplication::applicationDirPath() + QString("/plugins/");
+    return QString("plugins/");
 }
 
 bool DocumentWriterPlugin::invokeAction(const QString actionName_) {

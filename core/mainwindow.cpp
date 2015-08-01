@@ -54,7 +54,7 @@ void MainWindow::setup() {
     resize(1024, 768);
 #endif
 
-    QString dataDirPath = QString("data/"); //QCoreApplication::applicationDirPath() + QString("/data/");
+    QString dataDirPath = QString("data/");
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "MainWindow::setup:dataDirPath?" << getPluginPath();
@@ -171,7 +171,7 @@ void MainWindow::setupPlugins() {
     connect(browser, SIGNAL(executeActionFromPlugin(QString,QString)), pluginHandler, SLOT(invokeActionFromPlugin(QString,QString)));
     connect(browser, SIGNAL(pluginSelected(IPlugin*)), this, SLOT(pluginSelected(IPlugin*)));
 
-    QString pluginsDirPath = QString("plugins");//QCoreApplication::applicationDirPath() + QString("/plugins");
+    QString pluginsDirPath = QString("plugins");
 
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "pluginsDirPath:" << pluginsDirPath;
@@ -206,11 +206,8 @@ void MainWindow::pluginSelected(IPlugin *plugin) {
 
 void MainWindow::ringBell() {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
-    //qDebug() << "MainWindow::ringBell:bell->isAvailable?" << (bell->isAvailable() ? "yes" : "no");
     qDebug() << "MainWindow::ringBell:bell->fileName" << bell->fileName();
 #endif
-    //if (bell->isAvailable()) {
-        bell->stop();
-        bell->play();
-    //}
+    bell->stop();
+    bell->play();
 }
