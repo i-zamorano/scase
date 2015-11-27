@@ -48,8 +48,14 @@ void MainWindow::setup() {
     move(screenres.topLeft());
 
 #ifdef SCASE1_FULLSCREEN
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "MainWindow::setup:windowState before call to showFullScreen?" << windowState();
+#endif
     resize(screenres.width(), screenres.height());
-    showFullScreen();
+    setWindowState(windowState() | Qt::WindowFullScreen);
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "MainWindow::setup:windowState after call to showFullScreen?" << windowState();
+#endif
 #else
     resize(1024, 768);
 #endif
