@@ -20,6 +20,9 @@ TEMPLATE = app
 CONFIG += x86_64
 CONFIG -= x86
 
+QMAKE_CXXFLAGS += -coverage
+QMAKE_LFLAGS += -Wall -fprofile-arcs -ftest-coverage
+
 SOURCES += main.cpp\
         mainwindow.cpp \
     browser.cpp \
