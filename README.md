@@ -4,7 +4,7 @@ Extendable prototype of an assistive communication tool for people with Locked-i
 
 ## Source
 
-You can find the source for this program at ![https://github.com/adapar/scase](Github)
+You can find the source for this program at [Github](https://github.com/adapar/scase)
 
 ## Contact
 
