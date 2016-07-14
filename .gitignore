@@ -2,3 +2,4 @@ builds
 **/*.pro.user*
 working_dirs
 coverage
+**/build*
