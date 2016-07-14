@@ -58,7 +58,7 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
     rxBasePredictorValidator = QRegExp("\\w+");
 
-    presentationWidget = new DWPTextEdit();
+    presentationWidget = new DWPTextEdit(settings->value("presentation/ignore_keypresses", false).toBool());
 
     presentationWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     presentationWidget->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);

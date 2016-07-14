@@ -25,11 +25,16 @@
 
 #include <QKeyEvent>
 
-DWPTextEdit::DWPTextEdit(QTextEdit *parent) :
+DWPTextEdit::DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent) :
     QTextEdit(parent)
 {
+    ignoreKeypresses = pIgnoreKeyPresses;
 }
 
 void DWPTextEdit::keyPressEvent(QKeyEvent *e) {
-    e->ignore();
+    if (ignoreKeypresses) {
+        e->ignore();
+    } else {
+        QTextEdit::keyPressEvent(e);
+    }
 }

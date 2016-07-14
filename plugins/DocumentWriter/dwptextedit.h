@@ -30,13 +30,14 @@ class DWPTextEdit : public QTextEdit
 {
     Q_OBJECT
 public:
-    explicit DWPTextEdit(QTextEdit *parent = 0);
+    explicit DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent = 0);
 
 signals:
 
 public slots:
 
 private:
+    bool ignoreKeypresses;
     void keyPressEvent(QKeyEvent *e);
 };
 
