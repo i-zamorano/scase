@@ -38,6 +38,7 @@
 #include "interfaces/IBrowserItem.h"
 
 #include "dwptextedit.h"
+#include "dwppresagecallback.h"
 
 class SCASE1_PLUGIN_DOCUMENTWRITERSHARED_EXPORT DocumentWriterPlugin : public QObject, public IPlugin
 {
@@ -84,6 +85,8 @@ private:
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     int predictedItemsAdded;
+    DWPPresageCallback *presageCallback;
+    Presage *presage;
 #endif
 
 };

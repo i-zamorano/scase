@@ -22,14 +22,22 @@ debug {
     DEFINES += SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
 }
 
+DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+
 INCLUDEPATH += ../../core
+
+unix {
+    INCLUDEPATH += /usr/local/include
+    LIBS += -L/usr/local/lib -lpresage
+}
 
 SOURCES += documentwriterplugin.cpp \
     dwptextedit.cpp
 
 HEADERS += documentwriterplugin.h\
         scase1_plugin_documentwriter_global.h \
-    dwptextedit.h
+    dwptextedit.h \
+    dwppresagecallback.h
 
 dist.path = dist
 mac:dist.files = $$OUT_PWD/*DocumentWriter.dylib

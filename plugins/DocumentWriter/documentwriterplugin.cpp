@@ -52,10 +52,6 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
     settings = new QSettings(getPluginPath() + SCASE1_PLUGIN_DOCUMENTWRITER_SETTINGS_FILE + ".ini", QSettings::IniFormat, this);
 
-#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
-    predictedItemsAdded = 0;
-#endif
-
     rxBasePredictorValidator = QRegExp("\\w+");
 
     presentationWidget = new DWPTextEdit(settings->value("presentation/ignore_keypresses", false).toBool());
@@ -65,6 +61,12 @@ DocumentWriterPlugin::DocumentWriterPlugin()
     presentationWidget->setUndoRedoEnabled(true);
     presentationWidget->ensureCursorVisible();
     presentationWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+    predictedItemsAdded = 0;
+    presageCallback = new DWPPresageCallback(presentationWidget);
+    presage = new Presage(presageCallback);
+#endif
 }
 
 void DocumentWriterPlugin::setupOutputWidget() {
@@ -367,22 +369,24 @@ void DocumentWriterPlugin::updatePresentationWidget() {
     int oldPosition = cursor.position();
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
-    cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
-    if (cursor.selectedText().trimmed().size() > 0) {
-        if( rxBasePredictorValidator.exactMatch(cursor.selectedText().trimmed()) ) {
-            cursor.movePosition(QTextCursor::StartOfWord, QTextCursor::KeepAnchor);
-            QString predictionBase = cursor.selectedText().trimmed();
+    std::vector< std::string > predictions;
+
+    predictions = presage->predict();
+
+    if (predictions.size() > 0) {
+        if (rootLevel != NULL) {
+            int maxPredictions = ( predictions.size() < 3 ) ? predictions.size() : 3;
+
+            predictedItemsAdded = maxPredictions;
+
+            QString prediction;
+
+            for (int i = 0; i < maxPredictions; i++) {
+                prediction = QString::fromUtf8(predictions[i].c_str());
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-            qDebug() << "DocumentWriterPlugin.predictionBase:" << predictionBase;
+                qDebug() << "DocumentWriterPlugin.prediction:" << prediction;
 #endif
-            if (predictionBase.size() > 0) {
-                if (rootLevel != NULL) {
-                    //TODO: get predictions, add top N predictions to tree
-                    predictedItemsAdded = 3;
-                    browserDelegate->addItemToLevel(rootLevel, 0, QString("%1_3").arg(predictionBase), getName(), QString("write,%1_3").arg(predictionBase), true);
-                    browserDelegate->addItemToLevel(rootLevel, 0, QString("%1_2").arg(predictionBase), getName(), QString("write,%1_2").arg(predictionBase), true);
-                    browserDelegate->addItemToLevel(rootLevel, 0, QString("%1_1").arg(predictionBase), getName(), QString("write,%1_1").arg(predictionBase), true);
-                }
+                browserDelegate->addItemToLevel(rootLevel, 0, prediction, getName(), QString("write,%1").arg(prediction), true);
             }
         }
     }
