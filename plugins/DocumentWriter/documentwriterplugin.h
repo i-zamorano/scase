@@ -77,8 +77,6 @@ private:
 
     QSettings *settings;
 
-    QRegExp rxBasePredictorValidator;
-
     DWPTextEdit *presentationWidget;
 
     IBrowserLevel *rootLevel;

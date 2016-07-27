@@ -54,8 +54,6 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
     settings = new QSettings(getPluginPath() + SCASE1_PLUGIN_DOCUMENTWRITER_SETTINGS_FILE + ".ini", QSettings::IniFormat, this);
 
-    rxBasePredictorValidator = QRegExp("\\w+");
-
     presentationWidget = new DWPTextEdit(settings->value("presentation/ignore_keypresses", false).toBool());
 
     presentationWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -373,6 +371,8 @@ void DocumentWriterPlugin::updatePresentationWidget() {
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
 
+    presageStdContext = presentationWidget->getPredictionContext();
+
     predictions = presage.predict();
 
     if (predictions.size() > 0) {
@@ -384,7 +384,7 @@ void DocumentWriterPlugin::updatePresentationWidget() {
             QString prediction;
 
             for (int i = 0; i < maxPredictions; i++) {
-                prediction = QString::fromUtf8(predictions[i].c_str());
+                prediction = QString::fromUtf8(predictions[i].c_str()).toUpper();
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
                 qDebug() << "DocumentWriterPlugin.prediction:" << prediction;
 #endif
