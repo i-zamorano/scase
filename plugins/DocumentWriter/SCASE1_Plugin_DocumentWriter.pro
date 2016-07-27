@@ -9,6 +9,7 @@ QT       += core widgets
 
 CONFIG += x86_64
 CONFIG -= x86
+CONFIG += c++11
 
 QMAKE_CXXFLAGS += -coverage
 QMAKE_LFLAGS += -Wall -fprofile-arcs -ftest-coverage
