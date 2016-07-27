@@ -85,8 +85,9 @@ private:
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     int predictedItemsAdded;
-    DWPPresageCallback *presageCallback;
-    Presage *presage;
+    std::string presageStdContext;
+    DWPPresageCallback presageCallback;
+    Presage presage;
 #endif
 
 };

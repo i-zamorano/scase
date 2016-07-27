@@ -40,6 +40,8 @@
 #include <QtCore/qmath.h>
 
 DocumentWriterPlugin::DocumentWriterPlugin()
+    : presageCallback(presageStdContext),
+      presage(&presageCallback)
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
@@ -64,8 +66,8 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     predictedItemsAdded = 0;
-    presageCallback = new DWPPresageCallback(presentationWidget);
-    presage = new Presage(presageCallback);
+    presageStdContext += "A";
+    std::vector< std::string > predictions = presage.predict();
 #endif
 }
 
@@ -371,7 +373,7 @@ void DocumentWriterPlugin::updatePresentationWidget() {
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
 
-    predictions = presage->predict();
+    predictions = presage.predict();
 
     if (predictions.size() > 0) {
         if (rootLevel != NULL) {

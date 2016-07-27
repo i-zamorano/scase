@@ -32,6 +32,8 @@ class DWPTextEdit : public QTextEdit
 public:
     explicit DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent = 0);
 
+    std::string getPredictionContext();
+
 signals:
 
 public slots:

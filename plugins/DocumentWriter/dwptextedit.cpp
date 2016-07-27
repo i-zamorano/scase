@@ -24,6 +24,7 @@
 #include "dwptextedit.h"
 
 #include <QKeyEvent>
+#include <QDebug>
 
 DWPTextEdit::DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent) :
     QTextEdit(parent)
@@ -37,4 +38,11 @@ void DWPTextEdit::keyPressEvent(QKeyEvent *e) {
     } else {
         QTextEdit::keyPressEvent(e);
     }
+}
+
+std::string DWPTextEdit::getPredictionContext() {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin.getPredictionContext:" << toPlainText();
+#endif
+    return toPlainText().toStdString();
 }
