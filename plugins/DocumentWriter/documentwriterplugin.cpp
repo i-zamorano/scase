@@ -79,6 +79,7 @@ void DocumentWriterPlugin::show(QStackedWidget *container) {
     container->setCurrentWidget(getOutputWidget());
     presentationWidget->show();
     presentationWidget->raise();
+    presentationWidget->setFocus();
     setupOutputWidget();
 }
 
@@ -92,10 +93,10 @@ void DocumentWriterPlugin::hide() {
 
 void DocumentWriterPlugin::saveCurrentVersion() {
     QDate currentDate = QDate::currentDate();
-    QTime currentTime = QTime::currentTime();
 
-    QString path = QString(currentDate.year()) + QDir::separator() + QString(currentDate.month());
-    QString filename = currentTime.toString("version-HHMMSS.txt");
+    QString path = QString("%1%2%3").arg(QString(currentDate.year()), QString(QDir::separator()), QString(currentDate.month()));
+    QString filename = QString("version-%1.txt").arg(QTime::currentTime().toString("HHMMSS"));
+    QString filepath = QString("%1%2%3").arg(path, QString(QDir::separator()), filename);
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "DocumentWriterPlugin::saveCurrentVersion:path?" << path;
@@ -110,7 +111,7 @@ void DocumentWriterPlugin::saveCurrentVersion() {
         dir.mkpath(path);
     }
 
-    saveContentsTo(path + QDir::separator() + filename);
+    saveContentsTo(filepath);
 }
 
 void DocumentWriterPlugin::saveRecentCache() {
@@ -121,7 +122,7 @@ void DocumentWriterPlugin::saveRecentCache() {
 }
 
 QString DocumentWriterPlugin::getRecentCacheFilename() {
-    return documentPath + "recent.txt";
+    return QString("%1recent.txt").arg(documentPath);
 }
 
 void DocumentWriterPlugin::setDocumentPath(QString configuredPath) {
@@ -144,7 +145,7 @@ QString DocumentWriterPlugin::getContentsFrom(QString filepath) {
         content = in.readAll();
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     } else {
-        qDebug() << "DocumentWriterPlugin::getContentsFrom:could not open cache file for reading";
+        qDebug() << "DocumentWriterPlugin::getContentsFrom:could not open file for reading";
     }
 #else
     }
@@ -166,7 +167,7 @@ void DocumentWriterPlugin::saveContentsTo(QString filepath) {
         outputFile.close();
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     } else {
-        qDebug() << "DocumentWriterPlugin::saveContentsTo:could not open cache file for saving";
+        qDebug() << "DocumentWriterPlugin::saveContentsTo:could not open file for saving";
     }
 #else
     }
