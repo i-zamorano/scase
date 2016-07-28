@@ -64,8 +64,6 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     predictedItemsAdded = 0;
-    presageStdContext += "A";
-    std::vector< std::string > predictions = presage.predict();
 #endif
 }
 
@@ -378,8 +376,6 @@ void DocumentWriterPlugin::updateRootLevel() {
 }
 
 void DocumentWriterPlugin::updatePresentationWidget() {
-    QTextCursor cursor = presentationWidget->textCursor();
-
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     if (predictedItemsAdded > 0) {
         if (rootLevel != NULL) {
@@ -389,12 +385,9 @@ void DocumentWriterPlugin::updatePresentationWidget() {
         }
         predictedItemsAdded = 0;
     }
-
 #endif
 
     updateRootLevel();
-
-    int oldPosition = cursor.position();
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
@@ -416,7 +409,7 @@ void DocumentWriterPlugin::updatePresentationWidget() {
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
                 qDebug() << "DocumentWriterPlugin.prediction:" << prediction;
 #endif
-                browserDelegate->addItemToLevel(rootLevel, 0, prediction, getName(), QString("write,%1").arg(prediction), true);
+                browserDelegate->addItemToLevel(rootLevel, 0, prediction, getName(), QString("write_prediction,%1").arg(prediction), true);
             }
         }
     }
@@ -426,8 +419,5 @@ void DocumentWriterPlugin::updatePresentationWidget() {
         browserDelegate->goToLevel(rootLevel);
     }
 
-    cursor.setPosition(oldPosition);
-    presentationWidget->setTextCursor(cursor);
+    presentationWidget->ensureCursorVisible();
 }
-
-//Q_EXPORT_PLUGIN2(DocumentWriterPlugin, DocumentWriterPlugin)
