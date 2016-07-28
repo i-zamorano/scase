@@ -28,6 +28,8 @@
 #include <QStringList>
 #include <QFile>
 #include <QTextStream>
+#include <QDate>
+#include <QTime>
 #include <QDir>
 #include <QCoreApplication>
 #include <QGenericArgument>
@@ -65,14 +67,121 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     predictedItemsAdded = 0;
 #endif
+
+    connect(this, SLOT(textHasChanged()), presentationWidget, SIGNAL(textChanged()));
+}
+
+void DocumentWriterPlugin::textHasChanged() {
+    saveRecentCache();
+}
+
+void DocumentWriterPlugin::show(QStackedWidget *container) {
+    container->setCurrentWidget(getOutputWidget());
+    presentationWidget->show();
+    presentationWidget->raise();
+    setupOutputWidget();
+}
+
+void DocumentWriterPlugin::hide() {
+    if (autosave) {
+        saveCurrentVersion();
+    }
+    saveRecentCache();
+    presentationWidget->hide();
+}
+
+void DocumentWriterPlugin::saveCurrentVersion() {
+    QDate currentDate = QDate::currentDate();
+    QTime currentTime = QTime::currentTime();
+
+    QString path = QString(currentDate.year()) + QDir::separator() + QString(currentDate.month());
+    QString filename = currentTime.toString("version-HHMMSS.txt");
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::saveCurrentVersion:path?" << path;
+    qDebug() << "DocumentWriterPlugin::saveCurrentVersion:filename?" << filename;
+#endif
+
+    QDir dir(path);
+    if (dir.exists()) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+        qDebug() << "DocumentWriterPlugin::path did not exists, creating";
+#endif
+        dir.mkpath(path);
+    }
+
+    saveContentsTo(path + QDir::separator() + filename);
+}
+
+void DocumentWriterPlugin::saveRecentCache() {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+        qDebug() << "DocumentWriterPlugin::saveRecentCache";
+#endif
+    saveContentsTo(getRecentCacheFilename());
+}
+
+QString DocumentWriterPlugin::getRecentCacheFilename() {
+    return documentPath + "recent.txt";
+}
+
+void DocumentWriterPlugin::setDocumentPath(QString configuredPath) {
+    documentPath = userPath + QDir::separator() + configuredPath + QDir::separator();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::setDocumentPath:documentPath?" << documentPath;
+#endif
+}
+
+QString DocumentWriterPlugin::getRecentCache() {
+    return getContentsFrom(getRecentCacheFilename());
+}
+
+QString DocumentWriterPlugin::getContentsFrom(QString filepath) {
+    QFile inFile(filepath);
+    QString content = "";
+
+    if (inFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&inFile);
+        content = in.readAll();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    } else {
+        qDebug() << "DocumentWriterPlugin::getContentsFrom:could not open cache file for reading";
+    }
+#else
+    }
+#endif
+
+    return content;
+}
+
+void DocumentWriterPlugin::saveContentsTo(QString filepath) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::saveContentsTo:filename = " << filepath;
+#endif
+    QFile outputFile(filepath);
+
+    if (outputFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&outputFile);
+        out << presentationWidget->toPlainText();
+        outputFile.flush();
+        outputFile.close();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    } else {
+        qDebug() << "DocumentWriterPlugin::saveContentsTo:could not open cache file for saving";
+    }
+#else
+    }
+#endif
 }
 
 void DocumentWriterPlugin::setupOutputWidget() {
-    QString configuredPath = settings->value("storage/document_path", "documents").toString().trimmed();
     QString configuredColor = settings->value("presentation/color", "000000").toString().trimmed();
     QString configuredBackgroundColor = settings->value("presentation/background_color", "ffffff").toString().trimmed();
     QString configuredSize = settings->value("presentation/size", "100%").toString().trimmed();
     int configuredLines = settings->value("presentation/lines", 5).toInt();
+
+    QString configuredPath = settings->value("storage/document_path", "documents").toString().trimmed();
+    bool configuredAutoSave = settings->value("storage/autosave", true).toBool();
+    bool configuredAutoLoad = settings->value("storage/autoload", true).toBool();
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     QStringList keys = settings->allKeys();
@@ -84,6 +193,8 @@ void DocumentWriterPlugin::setupOutputWidget() {
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredSize?" << configuredSize;
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredLines?" << configuredLines;
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredPath?" << configuredPath;
+    qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredAutoSave?" << configuredAutoSave;
+    qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredAutoLoad?" << configuredAutoLoad;
 #endif
 
     int containerSize = presentationWidget->parentWidget()->size().height();
@@ -132,8 +243,15 @@ void DocumentWriterPlugin::setupOutputWidget() {
     presentationWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     presentationWidget->setStyleSheet(presentationWidgetStyle);
     presentationWidget->setCursorWidth(fontSize);
-
     presentationWidget->setFixedHeight(size);
+
+    autosave = configuredAutoSave;
+
+    setDocumentPath(configuredPath);
+
+    if (configuredAutoLoad) {
+        presentationWidget->setText(getRecentCache());
+    }
 
     QTextCursor cursor = presentationWidget->textCursor();
     QTextBlockFormat blockFormat = cursor.blockFormat();

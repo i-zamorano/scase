@@ -61,6 +61,8 @@ private:
     void setupInterface();
     void setupPlugins();
 
+    void hideCurrentPlugin();
+
     PluginHandler *pluginHandler;
     Browser *browser;
 
@@ -71,6 +73,8 @@ private:
     QSound *bell;
 
     QSettings *settings;
+
+    IPlugin *currentPlugin;
 };
 
 #endif // MAINWINDOW_H

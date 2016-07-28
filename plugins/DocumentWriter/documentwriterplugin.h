@@ -56,6 +56,11 @@ public:
     QString getName();
     QString getPluginPath();
     void setupOutputWidget();
+    void show(QStackedWidget *container);
+    void hide();
+
+protected slots:
+    void textHasChanged();
 
 private:
     //DocumentWriterPlugin methods
@@ -74,11 +79,26 @@ private:
 
     void delete_content(QTextCursor::MoveOperation);
 
+    void setDocumentPath(QString configuredPath);
+
+    QString getRecentCacheFilename();
+
+    void saveRecentCache();
+    void saveCurrentVersion();
+    void saveContentsTo(QString filepath);
+
+    QString getRecentCache();
+    QString getContentsFrom(QString filepath);
+
     QSettings *settings;
 
     DWPTextEdit *presentationWidget;
 
     IBrowserLevel *rootLevel;
+
+    bool autosave = true;
+
+    QString documentPath;
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     int predictedItemsAdded;

@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    hideCurrentPlugin();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -213,23 +214,30 @@ void MainWindow::setupPlugins() {
         QObject *plugin = loader.instance();
         if (plugin) {
             QString pluginName = IPLUGIN(plugin)->getName();
+            IPLUGIN(plugin)->setUserPath("user");
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
             qDebug() << "Loaded plugin" << pluginName << "from" << fileName;
 #endif
             pluginHandler->registerPlugin(pluginName, IPLUGIN(plugin), browser, zoneFeedback);
         }
     }
+
+    currentPlugin = NULL;
 }
 
 void MainWindow::pluginSelected(IPlugin *plugin) {
+    hideCurrentPlugin();
+
     if (plugin != NULL) {
-        QWidget *outputWidget = plugin->getOutputWidget();
-        if (outputWidget != NULL) {
-            zoneFeedback->setCurrentWidget(outputWidget);
-            outputWidget->show();
-            outputWidget->raise();
-            plugin->setupOutputWidget();
-        }
+        plugin->show(zoneFeedback);
+    }
+
+    currentPlugin = plugin;
+}
+
+void MainWindow::hideCurrentPlugin() {
+    if (currentPlugin != NULL) {
+        currentPlugin->hide();
     }
 }
 

@@ -28,6 +28,7 @@
 #include <QMetaObject>
 #include <QWidget>
 #include <QVariant>
+#include <QStackedWidget>
 
 #include "interfaces/IBrowserItem.h"
 #include "interfaces/IBrowserDelegate.h"
@@ -41,12 +42,17 @@ public:
     virtual QString getName() = 0;
     virtual QString getPluginPath() = 0;
     virtual void setupOutputWidget() = 0;
+    virtual void show(QStackedWidget *container) = 0;
+    virtual void hide() = 0;
+    inline void setUserPath(QString userPath_) { userPath = userPath_; }
     inline void setBrowserItemDelegate(IBrowserItem *delegate) { browserItemDelegate = delegate; }
     inline void setBrowserDelegate(IBrowserDelegate *delegate) { browserDelegate = delegate; }
 
 protected:
     IBrowserItem *browserItemDelegate;
     IBrowserDelegate *browserDelegate;
+
+    QString userPath;
 
 };
 
