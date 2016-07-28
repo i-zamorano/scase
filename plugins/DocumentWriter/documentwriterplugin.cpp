@@ -234,10 +234,6 @@ QString DocumentWriterPlugin::getName() {
     return QString(SCASE1_PLUGIN_DOCUMENTWRITER_NAME);
 }
 
-void DocumentWriterPlugin::write_special(QString value) {
-    write_special(value, "1");
-}
-
 void DocumentWriterPlugin::write_special(QString value, QString repetitions) {
     QString dataToAdd = "";
     if (value == "space") {
@@ -260,25 +256,57 @@ void DocumentWriterPlugin::write_special(QString value, QString repetitions) {
     }
 }
 
-void DocumentWriterPlugin::write(QString value) {
-    write(value, "1");
+void DocumentWriterPlugin::write_prediction(QString value) {
+    write(value, "1", true);
 }
 
-void DocumentWriterPlugin::write(QString value, QString repetitions) {
+void DocumentWriterPlugin::write(QString value, QString repetitions, bool isPrediction) {
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "value:" << value;
     qDebug() << "repetitions:" << repetitions;
 #endif
 
-    int total = repetitions.toInt();
-
-    if (total > 0) {
+    if (isPrediction) {
+        QString selectedText;
         QTextCursor cursor = presentationWidget->textCursor();
+
+        bool foundPrefix = false;
+        int checkedLength = 0;
+        int predictionLength = value.length();
+
         cursor.clearSelection();
-        for (int i = 0; i < total; i++) {
+        presentationWidget->moveCursor(QTextCursor::End);
+
+        while (!foundPrefix && checkedLength <= predictionLength) {
+            presentationWidget->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+            selectedText = cursor.selectedText();
+            checkedLength = selectedText.length();
+            if (value.indexOf(selectedText, 0, Qt::CaseInsensitive) == 0) {
+                foundPrefix = true;
+                cursor.removeSelectedText();
+                cursor.insertText(value);
+            }
+        }
+
+        if (!foundPrefix) {
+            //TODO: check if we need to add a space
+            //cursor.insertText(" ");
             cursor.insertText(value);
         }
+        presentationWidget->moveCursor(QTextCursor::End);
+        presentationWidget->setTextCursor(cursor);
         updatePresentationWidget();
+    } else {
+        int total = repetitions.toInt();
+
+        if (total > 0) {
+            QTextCursor cursor = presentationWidget->textCursor();
+            cursor.clearSelection();
+            for (int i = 0; i < total; i++) {
+                cursor.insertText(value);
+            }
+            updatePresentationWidget();
+        }
     }
 }
 

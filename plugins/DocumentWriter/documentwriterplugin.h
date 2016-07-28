@@ -59,10 +59,9 @@ public:
 
 private:
     //DocumentWriterPlugin methods
-    Q_INVOKABLE void write(QString value);
-    Q_INVOKABLE void write(QString value, QString repetitions);
-    Q_INVOKABLE void write_special(QString value);
-    Q_INVOKABLE void write_special(QString value, QString repetitions);
+    Q_INVOKABLE void write_prediction(QString value);
+    Q_INVOKABLE void write(QString value, QString repetitions = 1, bool isPrediction = false);
+    Q_INVOKABLE void write_special(QString value, QString repetitions = 1);
     Q_INVOKABLE void delete_previous_character();
     Q_INVOKABLE void delete_previous_word();
     Q_INVOKABLE void delete_all();
