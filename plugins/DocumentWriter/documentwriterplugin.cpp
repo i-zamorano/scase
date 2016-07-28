@@ -68,6 +68,7 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 }
 
 void DocumentWriterPlugin::setupOutputWidget() {
+    QString configuredPath = settings->value("storage/document_path", "documents").toString().trimmed();
     QString configuredColor = settings->value("presentation/color", "000000").toString().trimmed();
     QString configuredBackgroundColor = settings->value("presentation/background_color", "ffffff").toString().trimmed();
     QString configuredSize = settings->value("presentation/size", "100%").toString().trimmed();
@@ -82,6 +83,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredBackgroundColor?" << configuredBackgroundColor;
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredSize?" << configuredSize;
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredLines?" << configuredLines;
+    qDebug() << "DocumentWriterPlugin::setupOutputWidget:configuredPath?" << configuredPath;
 #endif
 
     int containerSize = presentationWidget->parentWidget()->size().height();
@@ -129,7 +131,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     presentationWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     presentationWidget->setStyleSheet(presentationWidgetStyle);
-    presentationWidget->setCursorWidth(12);
+    presentationWidget->setCursorWidth(fontSize);
 
     presentationWidget->setFixedHeight(size);
 
