@@ -272,27 +272,36 @@ void DocumentWriterPlugin::write(QString value, QString repetitions, bool isPred
         int checkedLength = 0;
         int predictionLength = value.length();
 
+        cursor.movePosition(QTextCursor::End);
         cursor.clearSelection();
-        presentationWidget->moveCursor(QTextCursor::End);
 
         while (!foundPrefix && checkedLength <= predictionLength) {
-            presentationWidget->moveCursor(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
+            cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
             selectedText = cursor.selectedText();
+            qDebug() << "write_prediction:selectedText = " << selectedText;
+            qDebug() << "write_prediction:value = " << value;
             checkedLength = selectedText.length();
             if (value.indexOf(selectedText, 0, Qt::CaseInsensitive) == 0) {
+                qDebug() << "write_prediction:foundPrefix!";
                 foundPrefix = true;
                 cursor.removeSelectedText();
                 cursor.insertText(value);
+                cursor.movePosition(QTextCursor::End);
+                cursor.clearSelection();
             }
         }
 
         if (!foundPrefix) {
-            //TODO: check if we need to add a space
-            //cursor.insertText(" ");
+            cursor.movePosition(QTextCursor::End);
+            cursor.clearSelection();
             cursor.insertText(value);
         }
-        presentationWidget->moveCursor(QTextCursor::End);
+
+        cursor.movePosition(QTextCursor::End);
+        cursor.clearSelection();
+
         presentationWidget->setTextCursor(cursor);
+
         updatePresentationWidget();
     } else {
         int total = repetitions.toInt();
