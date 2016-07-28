@@ -12,7 +12,6 @@ public:
     DWPPresageCallback(const std::string& _past_context) : past_context(_past_context) { }
 
     std::string get_past_stream() const {
-      std::cout << "past_context: " << past_context << std::endl << std::flush;
       return past_context;
     }
     std::string get_future_stream() const { return empty; }

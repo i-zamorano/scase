@@ -94,22 +94,18 @@ void DocumentWriterPlugin::hide() {
 void DocumentWriterPlugin::saveCurrentVersion() {
     QDate currentDate = QDate::currentDate();
 
-    QString path = QString("%1%2%3").arg(QString(currentDate.year()), QString(QDir::separator()), QString(currentDate.month()));
-    QString filename = QString("version-%1.txt").arg(QTime::currentTime().toString("HHMMSS"));
-    QString filepath = QString("%1%2%3").arg(path, QString(QDir::separator()), filename);
+    QString path = QDir::toNativeSeparators(QString("%1%2/%3").arg(documentPath, currentDate.toString("yyyy"), currentDate.toString("MM")));
+    QString filename = QString("version-%1-%2.txt").arg(currentDate.toString("dd"), QTime::currentTime().toString("HHmmss"));
+    QString filepath = QDir::toNativeSeparators(QString("%1/%2").arg(path, filename));
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::saveCurrentVersion:currentPath?" << QDir::currentPath();
     qDebug() << "DocumentWriterPlugin::saveCurrentVersion:path?" << path;
     qDebug() << "DocumentWriterPlugin::saveCurrentVersion:filename?" << filename;
 #endif
 
-    QDir dir(path);
-    if (dir.exists()) {
-#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-        qDebug() << "DocumentWriterPlugin::path did not exists, creating";
-#endif
-        dir.mkpath(path);
-    }
+    QDir dir(QDir::currentPath());
+    dir.mkpath(path);
 
     saveContentsTo(filepath);
 }
@@ -126,7 +122,7 @@ QString DocumentWriterPlugin::getRecentCacheFilename() {
 }
 
 void DocumentWriterPlugin::setDocumentPath(QString configuredPath) {
-    documentPath = userPath + QDir::separator() + configuredPath + QDir::separator();
+    documentPath = QDir::toNativeSeparators(QString("%1/%2/").arg(userPath, configuredPath));
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "DocumentWriterPlugin::setDocumentPath:documentPath?" << documentPath;
 #endif
