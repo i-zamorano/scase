@@ -258,6 +258,8 @@ void DocumentWriterPlugin::setupOutputWidget() {
     QTextBlockFormat blockFormat = cursor.blockFormat();
     blockFormat.setLineHeight(150, QTextBlockFormat::ProportionalHeight);
     cursor.setBlockFormat(blockFormat);
+    cursor.movePosition(QTextCursor::End);
+    cursor.clearSelection();
     presentationWidget->setTextCursor(cursor);
 }
 
