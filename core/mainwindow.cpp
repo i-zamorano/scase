@@ -210,7 +210,8 @@ void MainWindow::setupPlugins() {
     QDir pluginsDir = QDir(pluginsDirPath);
 
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+        QString pluginNativePath = QDir::toNativeSeparators(pluginsDir.absoluteFilePath(fileName));
+        QPluginLoader loader(pluginNativePath);
         QObject *plugin = loader.instance();
         if (plugin) {
             QString pluginName = IPLUGIN(plugin)->getName();

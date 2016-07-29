@@ -96,7 +96,7 @@ private:
 
     IBrowserLevel *rootLevel;
 
-    bool autosave = true;
+    bool autosave;
 
     QString documentPath;
 

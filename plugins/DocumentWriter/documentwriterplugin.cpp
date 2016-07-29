@@ -50,6 +50,8 @@ DocumentWriterPlugin::DocumentWriterPlugin()
     browserItemDelegate = NULL;
     rootLevel = NULL;
 
+    autosave = true;
+
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "DocumentWriterPlugin::DocumentWriterPlugin:pluginDirPath?" << getPluginPath();
 #endif
