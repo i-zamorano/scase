@@ -32,6 +32,12 @@ unix {
     LIBS += -L/usr/local/lib -lpresage
 }
 
+win32 {
+    PRESAGE_PATH = C:\Program Files\presage
+    INCLUDEPATH += $${PRESAGE_PATH}\include
+    LIBS += -L$${PRESAGE_PATH}\lib -lpresage
+}
+
 SOURCES += documentwriterplugin.cpp \
     dwptextedit.cpp
 
@@ -42,8 +48,11 @@ HEADERS += documentwriterplugin.h\
 
 dist.path = dist
 mac:dist.files = $$OUT_PWD/*DocumentWriter.dylib
+win32:dist.files = $$OUT_PWD/*DocumentWriter.dll
 
-scase1.path = ../SCASE1/plugins
+mac:scase1.path = ../SCASE1/plugins
 mac:scase1.files = $$OUT_PWD/*DocumentWriter.dylib
+mac:scase1.path = ..\SCASE1\plugins
+win32:scase1.files = $$OUT_PWD/*DocumentWriter.dll
 
 INSTALLS += dist scase1
