@@ -38,7 +38,7 @@ CONFIG(release) {
 }
 
 win32 {
-    PLUGIN_BUILD_DIR = build/$${BUILD_MODE}
+    PLUGIN_BUILD_DIR = builds/$${BUILD_MODE}
 }
 unix {
     PLUGIN_BUILD_DIR = build-SCASE1_Plugin_DocumentWriter-Desktop_Qt_5_5_1_clang_64bit-$${BUILD_MODE}
