@@ -11,23 +11,59 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = pluginTester
 TEMPLATE = app
 
+SOURCES += main.cpp
 
-SOURCES += main.cpp\
-        mainwindow.cpp
-
-HEADERS  += mainwindow.h
+HEADERS  +=
 
 INCLUDEPATH += ../core
 INCLUDEPATH += ../plugins/DocumentWriter
-LIBS += -L../plugins/build-SCASE1_Plugin_DocumentWriter-Desktop_Qt_5_5_1_clang_64bit-Debug -lDocumentWriter
 
-unix {
-    INCLUDEPATH += /usr/local/include
-    LIBS += -L/usr/local/lib -lpresage
+CONFIG += c++11
+
+CONFIG(debug) {
+    win32 {
+        BUILD_MODE = debug
+    }
+    unix {
+        BUILD_MODE = Debug
+    }
+}
+CONFIG(release) {
+    win32 {
+        BUILD_MODE = release
+    }
+    unix {
+        BUILD_MODE = Release
+    }
 }
 
 win32 {
-    PRESAGE_PATH = C:\Program Files\presage
-    INCLUDEPATH += $${PRESAGE_PATH}\include
-    LIBS += -L$${PRESAGE_PATH}\lib -lpresage
+    PLUGIN_BUILD_DIR = build/$${BUILD_MODE}
 }
+unix {
+    PLUGIN_BUILD_DIR = build-SCASE1_Plugin_DocumentWriter-Desktop_Qt_5_5_1_clang_64bit-$${BUILD_MODE}
+}
+
+PLUGIN_BUILD_DIR = ../plugins/$${PLUGIN_BUILD_DIR}
+PLUGIN_LIB_NAME = DocumentWriter
+
+isEmpty(PLUGIN_BUILD_DIR) {
+    error(Environment variable PLUGIN_BUILD_DIR must be set)
+}
+
+! exists($${PLUGIN_BUILD_DIR}) {
+    error($${PLUGIN_BUILD_DIR})
+}
+
+LIBS += -L$${PLUGIN_BUILD_DIR} -l$${PLUGIN_LIB_NAME}
+
+unix {
+    PRESAGE_ROOT = /usr/local/
+}
+
+win32 {
+    PRESAGE_ROOT = "C:\\Program Files\\presage\\"
+}
+
+INCLUDEPATH += $${PRESAGE_ROOT}include
+LIBS += -L$${PRESAGE_ROOT}lib -lpresage
