@@ -16,36 +16,19 @@ SOURCES += main.cpp
 HEADERS  +=
 
 INCLUDEPATH += ../core
-INCLUDEPATH += ../plugins/DocumentWriter
 
 CONFIG += c++11
 
 CONFIG(debug) {
-    win32 {
-        BUILD_MODE = debug
-    }
-    unix {
-        BUILD_MODE = Debug
-    }
+    BUILD_MODE = debug
 }
 CONFIG(release) {
-    win32 {
-        BUILD_MODE = release
-    }
-    unix {
-        BUILD_MODE = Release
-    }
+    BUILD_MODE = release
 }
 
-win32 {
-    PLUGIN_BUILD_DIR = builds/$${BUILD_MODE}
-}
-unix {
-    PLUGIN_BUILD_DIR = build-SCASE1_Plugin_DocumentWriter-Desktop_Qt_5_5_1_clang_64bit-$${BUILD_MODE}
-}
-
-PLUGIN_BUILD_DIR = ../plugins/$${PLUGIN_BUILD_DIR}
 PLUGIN_LIB_NAME = DocumentWriter
+
+PLUGIN_BUILD_DIR = ../builds/plugins/$${PLUGIN_LIB_NAME}/$${BUILD_MODE}
 
 isEmpty(PLUGIN_BUILD_DIR) {
     error(Environment variable PLUGIN_BUILD_DIR must be set)
@@ -55,6 +38,7 @@ isEmpty(PLUGIN_BUILD_DIR) {
     error($${PLUGIN_BUILD_DIR})
 }
 
+INCLUDEPATH += ../plugins/$${PLUGIN_LIB_NAME}
 LIBS += -L$${PLUGIN_BUILD_DIR} -l$${PLUGIN_LIB_NAME}
 
 unix {
