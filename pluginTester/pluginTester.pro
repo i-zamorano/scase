@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,7 +17,12 @@ HEADERS  +=
 
 INCLUDEPATH += ../core
 
+CONFIG += x86_64
+CONFIG -= x86
 CONFIG += c++11
+
+QMAKE_LFLAGS += -Wall
+
 CONFIG -= release
 CONFIG += debug
 
