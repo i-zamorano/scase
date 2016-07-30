@@ -2,3 +2,4 @@ builds
 **/*.pro.user*
 coverage
 **/build*
+*.autosave
