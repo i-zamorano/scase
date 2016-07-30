@@ -1,11 +1,13 @@
-#include "mainwindow.h"
 #include <QApplication>
+
+#include "documentwriterplugin.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+
+    DocumentWriterPlugin *dwp = new DocumentWriterPlugin();
+    QString pluginName = dwp->getName();
 
     return a.exec();
 }
