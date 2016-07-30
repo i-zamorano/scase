@@ -66,4 +66,3 @@ win32 {
 }
 
 INCLUDEPATH += $${PRESAGE_ROOT}include
-LIBS += -L$${PRESAGE_ROOT}lib -lpresage

@@ -21,8 +21,9 @@ CONFIG += x86_64
 CONFIG -= x86
 CONFIG += c++11
 
-QMAKE_CXXFLAGS += -coverage
-QMAKE_LFLAGS += -Wall -fprofile-arcs -ftest-coverage
+#QMAKE_CXXFLAGS += -coverage
+QMAKE_LFLAGS += -Wall
+# -fprofile-arcs -ftest-coverage
 
 SOURCES += main.cpp\
         mainwindow.cpp \

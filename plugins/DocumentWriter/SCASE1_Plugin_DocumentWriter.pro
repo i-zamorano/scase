@@ -13,8 +13,9 @@ CONFIG += c++11
 CONFIG += plugin
 CONFIG += static
 
-QMAKE_CXXFLAGS += -coverage
-QMAKE_LFLAGS += -Wall -fprofile-arcs -ftest-coverage
+#QMAKE_CXXFLAGS += -coverage
+QMAKE_LFLAGS += -Wall
+# -fprofile-arcs -ftest-coverage
 
 TARGET = DocumentWriter
 TEMPLATE = lib
