@@ -26,23 +26,18 @@ QMAKE_LFLAGS += -Wall
 CONFIG -= release
 CONFIG += debug
 
+DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+
 PLUGIN_LIB_NAME = DocumentWriter
 
+INCLUDEPATH += ../plugins/$${PLUGIN_LIB_NAME}
 win32 {
-    PLUGIN_BUILD_DIR = "..\\..\\plugins\\$${PLUGIN_LIB_NAME}\\debug"
+    LIBS += -L"$${OUT_PWD}\\debug"
 }
 unix {
-    PLUGIN_BUILD_DIR = ../../../builds/plugins/$${PLUGIN_LIB_NAME}/debug
+    LIBS += -L"$${OUT_PWD}/debug"
 }
 
-
-isEmpty(PLUGIN_BUILD_DIR) {
-    error(Environment variable PLUGIN_BUILD_DIR must be set)
-}
-
-INCLUDEPATH += ../plugins/$${PLUGIN_LIB_NAME}
-#LIBS += -L$${PLUGIN_BUILD_DIR}
-LIBS += -L"$${OUT_PWD}\\debug"
 LIBS += -l$${PLUGIN_LIB_NAME}
 
 unix {

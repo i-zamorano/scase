@@ -20,13 +20,21 @@ TEMPLATE = lib
 
 DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_LIBRARY
 
+DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+
 debug {
     DEFINES += SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
 }
 
-DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
-
 INCLUDEPATH += ../../core
+
+SOURCES += documentwriterplugin.cpp \
+    dwptextedit.cpp
+
+HEADERS += documentwriterplugin.h\
+        scase1_plugin_documentwriter_global.h \
+    dwptextedit.h \
+    dwppresagecallback.h
 
 win32 {
     PRESAGE_ROOT = "C:\\Program Files\\presage\\"
@@ -49,11 +57,3 @@ isEmpty(PRESAGE_ROOT) {
 
 INCLUDEPATH += $${PRESAGE_ROOT}include
 LIBS += -L$${PRESAGE_ROOT}lib -lpresage
-
-SOURCES += documentwriterplugin.cpp \
-    dwptextedit.cpp
-
-HEADERS += documentwriterplugin.h\
-        scase1_plugin_documentwriter_global.h \
-    dwptextedit.h \
-    dwppresagecallback.h
