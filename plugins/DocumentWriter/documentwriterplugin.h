@@ -40,7 +40,7 @@
 #include "dwptextedit.h"
 #include "dwppresagecallback.h"
 
-class SCASE1_PLUGIN_DOCUMENTWRITERSHARED_EXPORT DocumentWriterPlugin : public QObject, public IPlugin
+class Q_DECL_EXPORT DocumentWriterPlugin : public QObject, public IPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID SCASE1_PLUGIN_DOCUMENTWRITER_NAME)

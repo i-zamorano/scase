@@ -23,14 +23,22 @@ CONFIG += debug
 
 PLUGIN_LIB_NAME = DocumentWriter
 
-PLUGIN_BUILD_DIR = ../../../builds/plugins/$${PLUGIN_LIB_NAME}/debug
+win32 {
+    PLUGIN_BUILD_DIR = "..\\..\\plugins\\$${PLUGIN_LIB_NAME}\\debug"
+}
+unix {
+    PLUGIN_BUILD_DIR = ../../../builds/plugins/$${PLUGIN_LIB_NAME}/debug
+}
+
 
 isEmpty(PLUGIN_BUILD_DIR) {
     error(Environment variable PLUGIN_BUILD_DIR must be set)
 }
 
 INCLUDEPATH += ../plugins/$${PLUGIN_LIB_NAME}
-LIBS += -L$${PLUGIN_BUILD_DIR} -l$${PLUGIN_LIB_NAME}
+#LIBS += -L$${PLUGIN_BUILD_DIR}
+LIBS += -L"$${OUT_PWD}\\debug"
+LIBS += -l$${PLUGIN_LIB_NAME}
 
 unix {
     PRESAGE_ROOT = /usr/local/
