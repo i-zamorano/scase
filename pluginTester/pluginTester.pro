@@ -47,22 +47,11 @@ LIBS += -l$${PLUGIN_LIB_NAME}
 
 isEqual(USE_PREDICTOR, YES) {
     win32 {
-        PRESAGE_ROOT = ../../windows_lib/presage_091/64
+        INCLUDEPATH += ../../windows_lib/presage_091/32/include
+        LIBS += -L../../windows_lib/presage_091/32/lib -lpresage
     }
     unix {
-        PRESAGE_ROOT = /usr/local/
+        INCLUDEPATH += /usr/local/inlude
+        LIBS += -L/usr/local/lib -lpresage
     }
-
-    PRESAGE_ROOT = $${PRESAGE_ROOT}
-
-    isEmpty(PRESAGE_ROOT) {
-        error(Environment variable PRESAGE_ROOT must be set)
-    }
-
-    ! exists($${PRESAGE_ROOT}) {
-        error(PRESAGE_ROOT does not exist. Please set environment variable PRESAGE_ROOT to a valid presage installation)
-    }
-
-    INCLUDEPATH += $${PRESAGE_ROOT}include
-    LIBS += -L$${PRESAGE_ROOT}lib -lpresage
 }
