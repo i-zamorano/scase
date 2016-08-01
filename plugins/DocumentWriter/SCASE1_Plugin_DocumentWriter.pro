@@ -20,7 +20,9 @@ TEMPLATE = lib
 
 DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_LIBRARY
 
-defined(USE_PREDICTOR) {
+USE_PREDICTOR = YES
+
+isEqual(USE_PREDICTOR, YES) {
     DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
 }
 
@@ -38,24 +40,26 @@ HEADERS += documentwriterplugin.h\
     dwptextedit.h \
     dwppresagecallback.h
 
-win32 {
-    PRESAGE_ROOT = "C:\\Program Files\\presage\\"
-}
-
-PRESAGE_ROOT = $${PRESAGE_ROOT}
-
-isEmpty(PRESAGE_ROOT) {
+isEqual(USE_PREDICTOR, YES) {
     win32 {
-        error(Environment variable PRESAGE_ROOT must be set)
+        PRESAGE_ROOT = "C:\\Program Files\\presage\\"
     }
-    unix {
-        PRESAGE_ROOT = /usr/local/
+
+    PRESAGE_ROOT = $${PRESAGE_ROOT}
+
+    isEmpty(PRESAGE_ROOT) {
+        win32 {
+            error(Environment variable PRESAGE_ROOT must be set)
+        }
+        unix {
+            PRESAGE_ROOT = /usr/local/
+        }
     }
-}
 
-! exists($${PRESAGE_ROOT}) {
-    error(PRESAGE_ROOT does not exist. Please set environment variable PRESAGE_ROOT to a valid presage installation)
-}
+    ! exists($${PRESAGE_ROOT}) {
+        error(PRESAGE_ROOT does not exist. Please set environment variable PRESAGE_ROOT to a valid presage installation)
+    }
 
-INCLUDEPATH += $${PRESAGE_ROOT}include
-LIBS += -L$${PRESAGE_ROOT}lib -lpresage
+    INCLUDEPATH += $${PRESAGE_ROOT}include
+    LIBS += -L$${PRESAGE_ROOT}lib -lpresage
+}

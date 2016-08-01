@@ -26,7 +26,9 @@ QMAKE_LFLAGS += -Wall
 CONFIG -= release
 CONFIG += debug
 
-defined(USE_PREDICTOR) {
+USE_PREDICTOR = YES
+
+isEqual(USE_PREDICTOR, YES) {
     DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
 }
 
@@ -42,13 +44,15 @@ unix {
 
 LIBS += -l$${PLUGIN_LIB_NAME}
 
-unix {
-    PRESAGE_ROOT = /usr/local/
-}
+isEqual(USE_PREDICTOR, YES) {
+    unix {
+        PRESAGE_ROOT = /usr/local/
+    }
 
-win32 {
-    PRESAGE_ROOT = "C:\\Program Files\\presage\\"
-}
+    win32 {
+        PRESAGE_ROOT = "C:\\Program Files\\presage\\"
+    }
 
-INCLUDEPATH += $${PRESAGE_ROOT}include
-LIBS += -L$${PRESAGE_ROOT}lib -lpresage
+    INCLUDEPATH += $${PRESAGE_ROOT}include
+    LIBS += -L$${PRESAGE_ROOT}lib -lpresage
+}
