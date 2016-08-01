@@ -78,7 +78,7 @@
         <DefaultSmoothedNgramPredictor>
             <PREDICTOR>SmoothedNgramPredictor</PREDICTOR>
             <LOGGER>ERROR</LOGGER>
-            <DBFILENAME>plugins/presage/database_it.db</DBFILENAME>
+            <DBFILENAME>plugins/presage/database_es.db</DBFILENAME>
             <!-- delta_0, delta_1, ..., delta_{n-1}
 		 Deltas also control the value of n in the n-gram model.
 	    -->
@@ -122,19 +122,19 @@
         <DefaultAbbreviationExpansionPredictor>
             <PREDICTOR>AbbreviationExpansionPredictor</PREDICTOR>
             <LOGGER>ERROR</LOGGER>
-            <ABBREVIATIONS>/usr/local/share/presage/abbreviations_en.txt</ABBREVIATIONS>
+            <ABBREVIATIONS>plugins/presage/abbreviations_en.txt</ABBREVIATIONS>
         </DefaultAbbreviationExpansionPredictor>
         <DefaultDejavuPredictor>
             <PREDICTOR>DejavuPredictor</PREDICTOR>
             <LOGGER>ERROR</LOGGER>
-            <MEMORY>/usr/local/share/presage/dejavu_memory_en.txt</MEMORY>
+            <MEMORY>plugins/presage/dejavu_memory_en.txt</MEMORY>
             <TRIGGER>3</TRIGGER>
         </DefaultDejavuPredictor>
         <DefaultARPAPredictor>
             <PREDICTOR>ARPAPredictor</PREDICTOR>
             <LOGGER>ERROR</LOGGER>
-            <ARPAFILENAME>/usr/local/share/presage/arpa_en.arpa</ARPAFILENAME>
-            <VOCABFILENAME>/usr/local/share/presage/arpa_en.vocab</VOCABFILENAME>
+            <ARPAFILENAME>plugins/presage/arpa_en.arpa</ARPAFILENAME>
+            <VOCABFILENAME>plugins/presage/arpa_en.vocab</VOCABFILENAME>
             <TIMEOUT>100</TIMEOUT>
         </DefaultARPAPredictor>
     </Predictors>
