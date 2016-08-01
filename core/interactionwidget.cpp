@@ -25,6 +25,7 @@
 
 #include <QStyleOption>
 #include <QPainter>
+#include <QDebug>
 
 InteractionWidget::InteractionWidget(QWidget *parent) :
     QWidget(parent)
@@ -32,6 +33,8 @@ InteractionWidget::InteractionWidget(QWidget *parent) :
     activationDelay = 500;
     setAutoFillBackground(true);
     setStyleSheet("InteractionWidget { background-color:#999999 } InteractionWidget:hover { background-color:#009900 }");
+
+    isBlocked = false;
 }
 
 void InteractionWidget::enterEvent(QEvent *) {
@@ -40,11 +43,27 @@ void InteractionWidget::enterEvent(QEvent *) {
 }
 
 void InteractionWidget::leaveEvent(QEvent *) {
-    if (stopwatch.elapsed() >= activationDelay) {
-        emit activated();
-    } else {
-        emit userHasLeft();
+    if (!isBlocked) {
+        isBlocked = true;
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "InteractionWidget::leaveEvent has been called [begin]";
+#endif
+        if (stopwatch.elapsed() >= activationDelay) {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+            qDebug() << "InteractionWidget::leaveEvent has been called with an activation";
+#endif
+            emit activated();
+        } else {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+            qDebug() << "InteractionWidget::leaveEvent has been called with an pass";
+#endif
+            emit userHasLeft();
+        }
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "InteractionWidget::leaveEvent has been called [end]";
+#endif
     }
+    isBlocked = false;
 }
 
 void InteractionWidget::paintEvent(QPaintEvent *) {

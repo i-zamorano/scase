@@ -53,7 +53,7 @@ isEqual(USE_PREDICTOR, YES) {
         LIBS += -L../../../windows_lib/presage_091/32/lib -lpresage
     }
     unix {
-        INCLUDEPATH += /usr/local/inlude
+        INCLUDEPATH += /usr/local/include
         LIBS += -L/usr/local/lib -lpresage
     }
 }

@@ -50,6 +50,7 @@ protected:
 
 private:
     int activationDelay;
+    bool isBlocked;
 
     QTime stopwatch;
 

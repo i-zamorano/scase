@@ -111,9 +111,9 @@ void MainWindow::setupInterface() {
     zoneInteraction = new InteractionWidget(this);
     zoneBrowser = new BrowserPresentationWidget(this);
 
-    connect(zoneInteraction, SIGNAL(activated()), browser, SLOT(executeItem()));
-    connect(zoneInteraction, SIGNAL(userHasEntered()), browser, SLOT(stopTimer()));
-    connect(zoneInteraction, SIGNAL(userHasLeft()), browser, SLOT(startTimer()));
+    connect(zoneInteraction, SIGNAL(activated()), browser, SLOT(executeItem()), Qt::UniqueConnection);
+    connect(zoneInteraction, SIGNAL(userHasEntered()), browser, SLOT(stopTimer()), Qt::UniqueConnection);
+    connect(zoneInteraction, SIGNAL(userHasLeft()), browser, SLOT(startTimer()), Qt::UniqueConnection);
 
     QString configuredBackgroundColor = settings->value("general/background_color", "777777").toString().trimmed();
 
