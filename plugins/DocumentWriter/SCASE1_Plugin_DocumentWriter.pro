@@ -20,6 +20,7 @@ CONFIG += c++11
 CONFIG += plugin
 
 QMAKE_LFLAGS += -Wall
+QMAKE_CFLAGS += -g -O0
 
 TARGET = DocumentWriter
 TEMPLATE = lib

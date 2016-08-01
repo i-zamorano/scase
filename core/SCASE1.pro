@@ -23,6 +23,7 @@ CONFIG -= x86
 CONFIG += c++11
 
 QMAKE_LFLAGS += -Wall
+QMAKE_CFLAGS += -g -O0
 
 SOURCES += main.cpp\
         mainwindow.cpp \

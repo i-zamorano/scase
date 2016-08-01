@@ -23,9 +23,7 @@ CONFIG -= x86
 CONFIG += c++11
 
 QMAKE_LFLAGS += -Wall
-
-CONFIG -= release
-CONFIG += debug
+QMAKE_CFLAGS += -g -O0
 
 USE_PREDICTOR = YES
 
