@@ -44,7 +44,7 @@
 DocumentWriterPlugin::DocumentWriterPlugin()
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     : presageCallback(presageStdContext),
-      presage(&presageCallback)
+      presage(&presageCallback, "plugins/presage/presage.xml")
 #endif
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));

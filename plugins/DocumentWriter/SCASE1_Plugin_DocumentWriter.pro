@@ -48,18 +48,16 @@ HEADERS += documentwriterplugin.h\
 
 isEqual(USE_PREDICTOR, YES) {
     win32 {
-        PRESAGE_ROOT = "C:\\Program Files\\presage\\"
+        PRESAGE_ROOT = ../../windows_lib/presage_091/64
+    }
+    unix {
+        PRESAGE_ROOT = /usr/local/
     }
 
     PRESAGE_ROOT = $${PRESAGE_ROOT}
 
     isEmpty(PRESAGE_ROOT) {
-        win32 {
-            error(Environment variable PRESAGE_ROOT must be set)
-        }
-        unix {
-            PRESAGE_ROOT = /usr/local/
-        }
+        error(Environment variable PRESAGE_ROOT must be set)
     }
 
     ! exists($${PRESAGE_ROOT}) {
