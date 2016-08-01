@@ -1,6 +1,8 @@
 #ifndef DWPPRESAGECALLBACK_H
 #define DWPPRESAGECALLBACK_H
 
+#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+
 #include <presage.h>
 #include <iostream>
 
@@ -21,5 +23,7 @@ private:
     const std::string empty;
 
 };
+
+#endif
 
 #endif // DWPPRESAGECALLBACK_H

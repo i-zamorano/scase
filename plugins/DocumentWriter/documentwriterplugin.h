@@ -38,7 +38,10 @@
 #include "interfaces/IBrowserItem.h"
 
 #include "dwptextedit.h"
+
+#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
 #include "dwppresagecallback.h"
+#endif
 
 class Q_DECL_EXPORT DocumentWriterPlugin : public QObject, public IPlugin
 {

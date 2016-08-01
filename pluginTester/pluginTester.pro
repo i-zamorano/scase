@@ -26,7 +26,9 @@ QMAKE_LFLAGS += -Wall
 CONFIG -= release
 CONFIG += debug
 
-DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+defined(USE_PREDICTOR) {
+    DEFINES += SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
+}
 
 PLUGIN_LIB_NAME = DocumentWriter
 
@@ -35,7 +37,7 @@ win32 {
     LIBS += -L"$${OUT_PWD}\\debug"
 }
 unix {
-    LIBS += -L"$${OUT_PWD}/debug"
+    LIBS += -L"$${OUT_PWD}"
 }
 
 LIBS += -l$${PLUGIN_LIB_NAME}

@@ -42,8 +42,10 @@
 #include <QtCore/qmath.h>
 
 DocumentWriterPlugin::DocumentWriterPlugin()
+#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     : presageCallback(presageStdContext),
       presage(&presageCallback)
+#endif
 {
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 
