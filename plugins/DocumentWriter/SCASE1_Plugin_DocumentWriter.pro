@@ -7,7 +7,7 @@
 
 QT       += core widgets
 
-TESTING_STATIC = YES
+TESTING_STATIC = NO
 
 isEqual(TESTING_STATIC, YES) {
     CONFIG += static

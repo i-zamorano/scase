@@ -72,7 +72,7 @@ DocumentWriterPlugin::DocumentWriterPlugin()
     predictedItemsAdded = 0;
 #endif
 
-    connect(this, SLOT(textHasChanged()), presentationWidget, SIGNAL(textChanged()));
+    connect(presentationWidget, SIGNAL(textChanged()), this, SLOT(textHasChanged()));
 }
 
 void DocumentWriterPlugin::textHasChanged() {
