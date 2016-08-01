@@ -17,14 +17,8 @@ HEADERS  +=
 
 INCLUDEPATH += ../core
 
-win32 {
-    CONFIG -= x86_64
-    CONFIG += x86
-}
-unix {
-    CONFIG += x86_64
-    CONFIG -= x86
-}
+CONFIG += x86_64
+CONFIG -= x86
 
 CONFIG += c++11
 
