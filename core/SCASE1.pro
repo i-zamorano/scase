@@ -17,8 +17,15 @@ debug {
 TARGET = SCASE1
 TEMPLATE = app
 
-CONFIG += x86_64
-CONFIG -= x86
+win32 {
+    CONFIG -= x86_64
+    CONFIG += x86
+}
+unix {
+    CONFIG += x86_64
+    CONFIG -= x86
+}
+
 CONFIG += c++11
 
 QMAKE_LFLAGS += -Wall

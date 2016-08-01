@@ -7,11 +7,23 @@
 
 QT       += core widgets
 
-CONFIG += x86_64
-CONFIG -= x86
+TESTING_STATIC = YES
+
+isEqual(TESTING_STATIC, YES) {
+    CONFIG += static
+}
+
+win32 {
+    CONFIG -= x86_64
+    CONFIG += x86
+}
+unix {
+    CONFIG += x86_64
+    CONFIG -= x86
+}
+
 CONFIG += c++11
 CONFIG += plugin
-CONFIG += static
 
 QMAKE_LFLAGS += -Wall
 

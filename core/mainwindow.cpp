@@ -175,14 +175,14 @@ void MainWindow::setupInterface() {
         layout->setSpacing(0);
         layout->addWidget(zoneInteraction);
         layout->addSpacing(zoneInteractionSeparation);
-        layout->addWidget(zoneBrowser);
-        layout->addSpacing(zoneBrowserSeparation);
         layout->addWidget(zoneFeedback);
+        layout->addSpacing(zoneBrowserSeparation);
+        layout->addWidget(zoneBrowser);
     } else {
         layout->setSpacing(0);
-        layout->addWidget(zoneFeedback);
-        layout->addSpacing(zoneBrowserSeparation);
         layout->addWidget(zoneBrowser);
+        layout->addSpacing(zoneBrowserSeparation);
+        layout->addWidget(zoneFeedback);
         layout->addSpacing(zoneInteractionSeparation);
         layout->addWidget(zoneInteraction);
     }
