@@ -50,6 +50,7 @@ private:
     QString backgroundColor;
     QString backgroundColorSpecial;
     int fontSize;
+    int padding;
 };
 
 #endif // BROWSERPRESENTATIONWIDGET_H

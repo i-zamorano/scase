@@ -24,6 +24,7 @@
 #include "browserpresentationwidget.h"
 
 #include <QtCore/qmath.h>
+#include <QDebug>
 
 BrowserPresentationWidget::BrowserPresentationWidget(QWidget *parent) :
     QLabel(parent)
@@ -38,11 +39,23 @@ void BrowserPresentationWidget::setupStyle(QString color_, QString backgroundCol
     color = color_;
     backgroundColor = backgroundColor_;
     backgroundColorSpecial = backgroundColorSpecial_;
+
     fontSize = qCeil(size * 0.8);
+    padding = qCeil(size * 0.1);
+
+    if (fontSize > 80) {
+        fontSize = 80;
+    }
+
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "BrowserPresentationWidget::setupStyle:size" << QString::number(size);
+    qDebug() << "BrowserPresentationWidget::setupStyle:fontSize" << QString::number(fontSize);
+    qDebug() << "BrowserPresentationWidget::setupStyle:padding" << QString::number(padding);
+#endif
 }
 
 void BrowserPresentationWidget::setPresentationData(QString data, bool isSpecial) {
     setText(data);
-    setStyleSheet(QString("BrowserPresentationWidget { font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2 }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor)));
+    setStyleSheet(QString("BrowserPresentationWidget { font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2; padding:%3px; }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor), QString::number(padding)));
 }
 
