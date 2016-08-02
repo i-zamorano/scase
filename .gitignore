@@ -1,5 +1,6 @@
 builds
 **/*.pro.user*
 coverage
+**/*.log
 **/build*
 *.autosave

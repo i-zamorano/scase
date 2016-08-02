@@ -31,7 +31,7 @@
 #include <QSound>
 #include <QResizeEvent>
 #include <QSettings>
-
+#include <QFile>
 
 #include "interfaces/IPlugin.h"
 
@@ -62,6 +62,13 @@ private:
     void setupPlugins();
 
     void hideCurrentPlugin();
+
+    void openActionLogger();
+    void logAction(QString action, QString message = "");
+    void closeActionLogger();
+    QFile *actionLog;
+
+    bool isActionLogActive;
 
     PluginHandler *pluginHandler;
     Browser *browser;

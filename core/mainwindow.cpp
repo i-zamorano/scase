@@ -35,6 +35,8 @@
 #include <QDesktopWidget>
 #include <QPoint>
 #include <QtCore/qmath.h>
+#include <QTextStream>
+#include <QDateTime>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,6 +47,10 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     hideCurrentPlugin();
+
+    if (isActionLogActive) {
+
+    }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -87,7 +93,7 @@ void MainWindow::setup() {
     QString dataDirPath = QString("data/");
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "MainWindow::setup:dataDirPath?" << getPluginPath();
+    qDebug() << "MainWindow::setup:dataDirPath?" << dataDirPath();
 #endif
 
     settings = new QSettings(dataDirPath + "config.ini", QSettings::IniFormat, this);
@@ -95,6 +101,14 @@ void MainWindow::setup() {
     bell = new QSound(dataDirPath + "bell.wav", this);
 
     browser = new Browser(this);
+
+    isActionLogActive = settings->value("general/log_actions", true).toBool();
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "MainWindow::setup:isActionLogActive?" << (isActionLogActive ? "yes":"no");
+#endif
+
+    openActionLogger();
 
     setupInterface();
     setupPlugins();
@@ -104,6 +118,47 @@ void MainWindow::setup() {
     browser->start(zoneBrowser, settings->value("zone_browser/item_presentation_time", "1000").toInt());
 
     raise();
+}
+
+void MainWindow::openActionLogger() {
+    if (isActionLogActive) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "MainWindow::openActionLogger:filename = " << filepath;
+#endif
+        QDir dir(QDir::currentPath());
+        dir.mkpath("user/log");
+
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+
+        QString logFilename = QDir::toNativeSeparators(QString("user/log/%2.log").arg(currentDateTime.toString("yyyyMMdd_HHmmss")));
+
+        actionLog = new QFile(logFilename);
+
+        if (!actionLog->open(QIODevice::WriteOnly | QIODevice::Text)) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+            qDebug() << "MainWindow::openActionLogger:could not open action log file";
+#endif
+            actionLog = NULL;
+        }
+    }
+}
+
+void MainWindow::logAction(QString action, QString message) {
+    if (isActionLogActive && (actionLog != NULL)) {
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+
+        QString log = QString("%1 - %2 - %3").arg(currentDateTime.toString("yyyy-MM-dd HH:mm:ss"), action, message);
+        QTextStream out(actionLog);
+        out << log;
+        actionLog->flush();
+    }
+}
+
+void MainWindow::closeActionLogger() {
+    if (isActionLogActive && (actionLog != NULL)) {
+        actionLog->flush();
+        actionLog->close();
+    }
 }
 
 void MainWindow::setupInterface() {
