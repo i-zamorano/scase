@@ -355,6 +355,10 @@ QString DocumentWriterPlugin::getName() {
     return QString(SCASE1_PLUGIN_DOCUMENTWRITER_NAME);
 }
 
+void DocumentWriterPlugin::pause() {
+
+}
+
 void DocumentWriterPlugin::write_special(QString value, QString repetitions) {
     QString dataToAdd = "";
     if (value == "space") {

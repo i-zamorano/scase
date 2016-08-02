@@ -1,5 +1,8 @@
 <item name='ESCRIBIR'>
 	<level>
+    <item name="       ">
+      <action>pause</action>
+    </item>
 		<item name='ESPACIO'>
 			<action>write_special,space</action>
 		</item>
