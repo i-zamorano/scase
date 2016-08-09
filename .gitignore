@@ -6,3 +6,4 @@ coverage
 *.autosave
 working_dirs/user/*
 working_dirs/documents/*
+working_dirs/**/*.db
