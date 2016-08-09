@@ -4,3 +4,5 @@ coverage
 **/*.log
 **/build*
 *.autosave
+working_dirs/user/*
+working_dirs/documents/*

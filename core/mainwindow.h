@@ -52,6 +52,7 @@ public:
 
 public slots:
     void pluginSelected(IPlugin *plugin);
+    void logAction(QString action, QString message = "");
     void ringBell();
 
 private:
@@ -64,7 +65,6 @@ private:
     void hideCurrentPlugin();
 
     void openActionLogger();
-    void logAction(QString action, QString message = "");
     void closeActionLogger();
     QFile *actionLog;
 

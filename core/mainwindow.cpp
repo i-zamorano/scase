@@ -47,10 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     hideCurrentPlugin();
-
-    if (isActionLogActive) {
-
-    }
+    closeActionLogger();
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -149,7 +146,7 @@ void MainWindow::logAction(QString action, QString message) {
 
         QString log = QString("%1 - %2 - %3").arg(currentDateTime.toString("yyyy-MM-dd HH:mm:ss"), action, message);
         QTextStream out(actionLog);
-        out << log;
+        out << log << endl;
         actionLog->flush();
     }
 }
@@ -253,6 +250,7 @@ void MainWindow::setupInterface() {
 void MainWindow::setupPlugins() {
     pluginHandler = new PluginHandler(this);
 
+    connect(browser, SIGNAL(executeActionFromPlugin(QString,QString)), this, SLOT(logAction(QString,QString)));
     connect(browser, SIGNAL(executeActionFromPlugin(QString,QString)), pluginHandler, SLOT(invokeActionFromPlugin(QString,QString)));
     connect(browser, SIGNAL(pluginSelected(IPlugin*)), this, SLOT(pluginSelected(IPlugin*)));
 
