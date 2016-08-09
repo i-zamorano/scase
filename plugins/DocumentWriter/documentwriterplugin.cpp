@@ -402,14 +402,19 @@ void DocumentWriterPlugin::write(QString value, QString repetitions, bool isPred
         cursor.movePosition(QTextCursor::End);
         cursor.clearSelection();
 
-        while (!foundPrefix && checkedLength <= predictionLength) {
+        while (!foundPrefix && checkedLength <= predictionLength && cursor.position() > 0) {
             cursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
             selectedText = cursor.selectedText();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+            qDebug() << "write_prediction:cursor.position= " << QString::number(cursor.position());
             qDebug() << "write_prediction:selectedText = " << selectedText;
             qDebug() << "write_prediction:value = " << value;
             checkedLength = selectedText.length();
+#endif
             if (value.indexOf(selectedText, 0, Qt::CaseInsensitive) == 0) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
                 qDebug() << "write_prediction:foundPrefix!";
+#endif
                 foundPrefix = true;
                 cursor.removeSelectedText();
                 cursor.insertText(value);
