@@ -33,6 +33,7 @@ class IBrowserDelegate {
 public:
     virtual void addItemToLevel(IBrowserLevel *level, int pos, QString name, QString moduleName, QString actionName, bool isSpecial) = 0;
     virtual void goToLevel(IBrowserLevel *level) = 0;
+    virtual void actionDidFinish() = 0;
 
 };
 

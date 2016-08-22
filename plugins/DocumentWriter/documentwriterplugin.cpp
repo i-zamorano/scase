@@ -267,9 +267,7 @@ QString DocumentWriterPlugin::getPluginPath() {
     return QString("plugins/");
 }
 
-bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
-    bool output = false;
-
+void DocumentWriterPlugin::invokeActionPrivate(const QString actionName_) {
     QStringList parts = actionName_.split(",");
 
     if (parts.size() > 0) {
@@ -315,15 +313,13 @@ bool DocumentWriterPlugin::invokeAction(const QString actionName_) {
 
         if (methodIndex > -1) {
             QMetaMethod metaMethod = metaObject()->method(methodIndex);
-            output = metaMethod.invoke(this, argumentTable[0], argumentTable[1], argumentTable[2], argumentTable[3], argumentTable[4], argumentTable[5], argumentTable[6], argumentTable[7], argumentTable[8], argumentTable[9]);
+            metaMethod.invoke(this, argumentTable[0], argumentTable[1], argumentTable[2], argumentTable[3], argumentTable[4], argumentTable[5], argumentTable[6], argumentTable[7], argumentTable[8], argumentTable[9]);
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
         } else {
             qDebug() << "signature:" << signature << "not found";
 #endif
         }
     }
-
-    return output;
 }
 
 QString DocumentWriterPlugin::getBrowserTree() {
@@ -509,6 +505,7 @@ void DocumentWriterPlugin::move_cursor(QString direction, QString type) {
 }
 
 void DocumentWriterPlugin::updateRootLevel() {
+    //TODO: check deep stacking of same level
     if ((browserItemDelegate != NULL) && browserItemDelegate->hasLevelBelow()) {
         rootLevel = browserItemDelegate->getLevelBelow();
     } else {
@@ -528,11 +525,12 @@ void DocumentWriterPlugin::updatePresentationWidget() {
     }
 #endif
 
-    updateRootLevel();
+    //updateRootLevel();
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
 
+    //TODO: add verification of 'should predict'
     presageStdContext = presentationWidget->getPredictionContext();
 
     predictions = presage.predict();
@@ -556,9 +554,10 @@ void DocumentWriterPlugin::updatePresentationWidget() {
     }
 #endif
 
-    if (rootLevel != NULL) {
-        browserDelegate->goToLevel(rootLevel);
-    }
+    //TODO: plugins should not handle navigation directly
+//    if (rootLevel != NULL) {
+//        browserDelegate->goToLevel(rootLevel);
+//    }
 
     presentationWidget->ensureCursorVisible();
 }

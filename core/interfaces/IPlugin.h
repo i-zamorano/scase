@@ -36,7 +36,7 @@
 class IPlugin {
 
 public:
-    virtual bool invokeAction(const QString actionName_) = 0;
+    inline void invokeAction(const QString actionName_) { invokeActionPrivate(actionName_); if (browserDelegate != NULL) browserDelegate->actionDidFinish(); }
     virtual QString getBrowserTree() = 0;
     virtual QWidget *getOutputWidget() = 0;
     virtual QString getName() = 0;
@@ -48,11 +48,16 @@ public:
     inline void setBrowserItemDelegate(IBrowserItem *delegate) { browserItemDelegate = delegate; }
     inline void setBrowserDelegate(IBrowserDelegate *delegate) { browserDelegate = delegate; }
 
+signals:
+    void actionFinished();
+
 protected:
     IBrowserItem *browserItemDelegate;
     IBrowserDelegate *browserDelegate;
 
     QString userPath;
+
+    virtual void invokeActionPrivate(const QString actionName_) = 0;
 
 };
 

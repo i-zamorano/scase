@@ -53,7 +53,6 @@ public:
     DocumentWriterPlugin();
 
     //IPlugin methods
-    bool invokeAction(const QString actionName_);
     QString getBrowserTree();
     QWidget *getOutputWidget();
     QString getName();
@@ -66,6 +65,9 @@ protected slots:
     void textHasChanged();
 
 private:
+    //IPlugin methods
+    void invokeActionPrivate(const QString actionName_);
+
     //DocumentWriterPlugin methods
     Q_INVOKABLE void pause();
     Q_INVOKABLE void write_prediction(QString value);

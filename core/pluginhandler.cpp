@@ -51,11 +51,10 @@ void PluginHandler::registerPlugin(const QString pluginName, IPlugin *plugin, Br
     }
 }
 
-bool PluginHandler::invokeActionFromPlugin(const QString pluginName, const QString actionName) {
+void PluginHandler::invokeActionFromPlugin(const QString pluginName, const QString actionName) {
     if (directory.contains(pluginName)) {
-        return directory.value(pluginName)->invokeAction(actionName);
+        directory.value(pluginName)->invokeAction(actionName);
     }
-    return false;
 }
 
 QWidget *PluginHandler::getOutputWidgetFromPlugin(const QString pluginName) {

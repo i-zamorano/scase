@@ -62,25 +62,38 @@ void Browser::startTimer() {
     timer->start();
 }
 
-void Browser::nextItem() {
-    stopTimer();
+void Browser::restartTimer() {
+    timer->stop();
+    timer->start();
+}
 
-    bool rewind = false;
+void Browser::goToPreviousLevelWithPause() {
+    goToPreviousLevel(false, true);
+}
+
+void Browser::nextItem(bool forceRewind) {
+    stopTimer();
 
     currentLevel->next();
     currentItem = currentLevel->getCurrentItem();
 
-    if (currentItem == NULL) {
-        if (levelStack.size() > 1) {
-            if (navigationStatus == BROWSER_READ_FROM_TREE) {
-                navigationStatus = BROWSER_PSEUDOITEM_UP_ONE_LEVEL;
-            } else if (navigationStatus == BROWSER_PSEUDOITEM_UP_ONE_LEVEL) {
+    bool rewind = false;
+
+    if (forceRewind) {
+        rewind = true;
+    } else {
+        if (currentItem == NULL) {
+            if (levelStack.size() > 1) {
+                if (navigationStatus == BROWSER_READ_FROM_TREE) {
+                    navigationStatus = BROWSER_PSEUDOITEM_UP_ONE_LEVEL;
+                } else if (navigationStatus == BROWSER_PSEUDOITEM_UP_ONE_LEVEL) {
+                    navigationStatus = BROWSER_READ_FROM_TREE;
+                    rewind = true;
+                }
+            } else {
                 navigationStatus = BROWSER_READ_FROM_TREE;
                 rewind = true;
             }
-        } else {
-            navigationStatus = BROWSER_READ_FROM_TREE;
-            rewind = true;
         }
     }
 
@@ -89,7 +102,7 @@ void Browser::nextItem() {
         currentItem = currentLevel->getCurrentItem();
     }
 
-    updatePresentationDelegate();
+    updatePresentationDelegate(forceRewind);
 }
 
 void Browser::executeItem() {
@@ -119,6 +132,7 @@ void Browser::executeItem() {
 #endif
                     if (currentItem->getActionModule() == SCASE1_MODULE_BROWSER) {
                         QMetaObject::invokeMethod(this, currentItem->getActionName().toLatin1().constData());
+                        //TODO: check if has to be removed
                         startTimer();
                     } else {
                         emit executeActionFromPlugin(currentItem->getActionModule(), currentItem->getActionName());
@@ -138,7 +152,7 @@ void Browser::goToPreviousStop() {
     goToPreviousLevel(true);
 }
 
-void Browser::goToPreviousLevel(bool waitForStop) {
+void Browser::goToPreviousLevel(bool waitForStop, bool doPause) {
     stopTimer();
 
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
@@ -183,7 +197,7 @@ void Browser::goToPreviousLevel(bool waitForStop) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "Browser:executeItem:goToPreviousLevel:(FOUND):previousLevel belongs to?" << ((previousLevel->getContainer() != NULL) ? previousLevel->getContainer()->getPresentationData() : "NULL");
 #endif
-    setCurrentLevel(previousLevel);
+    setCurrentLevel(previousLevel, doPause);
 }
 
 void Browser::goToLevel(IBrowserLevel *level) {
@@ -194,16 +208,16 @@ void Browser::goToLevel(IBrowserLevel *level) {
     }
 }
 
-void Browser::setCurrentLevel(BrowserLevel *level) {
+void Browser::setCurrentLevel(BrowserLevel *level, bool doPause) {
     currentLevel = level;
     currentLevel->reset();
     currentItem = currentLevel->getCurrentItem();
     navigationStatus = BROWSER_READ_FROM_TREE;
     levelStack.push(currentLevel);
-    updatePresentationDelegate();
+    updatePresentationDelegate(doPause);
 }
 
-void Browser::updatePresentationDelegate() {
+void Browser::updatePresentationDelegate(bool doPause) {
     stopTimer();
 
     if (presentationDelegate != NULL) {
@@ -218,7 +232,22 @@ void Browser::updatePresentationDelegate() {
         }
     }
 
-    startTimer();
+    if (doPause) {
+        //TODO: add pause if it exists
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "Browser::updatePresentationDelegate - with pause";
+#endif
+        startTimer();
+    } else {
+        startTimer();
+    }
+}
+
+void Browser::actionDidFinish() {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "Browser::actionDidFinish - rewinding";
+#endif
+    goToPreviousLevelWithPause();
 }
 
 void Browser::setupPluginTree(IPlugin *plugin) {

@@ -46,7 +46,7 @@ public:
 signals:
 
 public slots:
-    bool invokeActionFromPlugin(const QString pluginName, const QString actionName);
+    void invokeActionFromPlugin(const QString pluginName, const QString actionName);
 
 private:
     QHash<QString, IPlugin *> directory;
