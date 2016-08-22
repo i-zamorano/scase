@@ -5,7 +5,8 @@
         <!-- PREDICTORS
 	     Space separated list of predictors to use to generate predictions
         -->
-        <PREDICTORS>DefaultSmoothedNgramPredictor UserSmoothedNgramPredictor DefaultRecencyPredictor</PREDICTORS>
+        <PREDICTORS>DefaultRecencyPredictor</PREDICTORS>
+        <!-- <PREDICTORS>DefaultSmoothedNgramPredictor UserSmoothedNgramPredictor DefaultRecencyPredictor</PREDICTORS> //-->
     </PredictorRegistry>
     <ContextTracker>
         <LOGGER>ERROR</LOGGER>
@@ -95,7 +96,7 @@
 	          - $HOME on Unix
                   - %USERPROFILE% on Windows
 	      -->
-            <DBFILENAME>plugins/presage/lm.db</DBFILENAME>
+            <DBFILENAME>user/prediction.db</DBFILENAME>
             <!-- delta_0, delta_1, ..., delta_{n-1}
 		 Deltas also control the value of n in the n-gram model.
 	    -->
@@ -115,7 +116,7 @@
         <DefaultDictionaryPredictor>
             <PREDICTOR>DictionaryPredictor</PREDICTOR>
             <LOGGER>ERROR</LOGGER>
-            <DICTIONARY>/usr/share/dict/words</DICTIONARY>
+            <DICTIONARY>plugins/presage/dict_spanish.txt</DICTIONARY>
             <!-- fixed probability assigned to prediction -->
             <PROBABILITY>0.000001</PROBABILITY>
         </DefaultDictionaryPredictor>
