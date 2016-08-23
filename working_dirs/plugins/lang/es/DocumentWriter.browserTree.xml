@@ -22,7 +22,7 @@
 				</item>
 			</level>
 		</item>
-		<item name='VOCALES CON TILDE O DIÉRESIS'>
+		<item name='VOCALES CON TILDE'>
 			<level>
 				<item name='Á'>
 					<action>write,Á</action>
