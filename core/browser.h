@@ -58,7 +58,7 @@ public:
 
     virtual void addItemToLevel(IBrowserLevel *level, int pos, QString name, QString moduleName, QString actionName, bool isSpecial);
 
-    void actionDidFinish();
+    void actionDidFinish(IBrowserItem *item = NULL);
 
     void test();
 
@@ -69,15 +69,16 @@ signals:
     void ringBellSignal();
 
 public slots:
-    void goToPreviousLevelWithPause();
-    void nextItem(bool forceRewind = false);
+    void nextItem();
     void executeItem();
     void goToPreviousStop();
-    void goToLevel(IBrowserLevel *level);
+    void goToLevel(IBrowserLevel *ilevel);
     void stopTimer();
     void startTimer();
-    void restartTimer();
     void ring_bell();
+
+private slots:
+    void updatePresentationDelegate();
 
 private:
     BROWSER_NAVIGATION_STATUS navigationStatus;
@@ -96,10 +97,9 @@ private:
     int itemDelay;
     QTimer *timer;
 
-    void setCurrentLevel(BrowserLevel *level, bool doPause = false);
-    void updatePresentationDelegate(bool doPause = false);
+    void setCurrentLevel(BrowserLevel *level);
 
-    void goToPreviousLevel(bool waitForStop = false, bool doPause = false);
+    void goToPreviousLevel(bool waitForStop = false);
 };
 
 #endif // BROWSER_H

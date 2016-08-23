@@ -62,38 +62,25 @@ void Browser::startTimer() {
     timer->start();
 }
 
-void Browser::restartTimer() {
-    timer->stop();
-    timer->start();
-}
-
-void Browser::goToPreviousLevelWithPause() {
-    goToPreviousLevel(false, true);
-}
-
-void Browser::nextItem(bool forceRewind) {
-    stopTimer();
+void Browser::nextItem() {
+//    stopTimer();
 
     currentLevel->next();
     currentItem = currentLevel->getCurrentItem();
 
     bool rewind = false;
 
-    if (forceRewind) {
-        rewind = true;
-    } else {
-        if (currentItem == NULL) {
-            if (levelStack.size() > 1) {
-                if (navigationStatus == BROWSER_READ_FROM_TREE) {
-                    navigationStatus = BROWSER_PSEUDOITEM_UP_ONE_LEVEL;
-                } else if (navigationStatus == BROWSER_PSEUDOITEM_UP_ONE_LEVEL) {
-                    navigationStatus = BROWSER_READ_FROM_TREE;
-                    rewind = true;
-                }
-            } else {
+    if (currentItem == NULL) {
+        if (levelStack.size() > 1) {
+            if (navigationStatus == BROWSER_READ_FROM_TREE) {
+                navigationStatus = BROWSER_PSEUDOITEM_UP_ONE_LEVEL;
+            } else if (navigationStatus == BROWSER_PSEUDOITEM_UP_ONE_LEVEL) {
                 navigationStatus = BROWSER_READ_FROM_TREE;
                 rewind = true;
             }
+        } else {
+            navigationStatus = BROWSER_READ_FROM_TREE;
+            rewind = true;
         }
     }
 
@@ -102,7 +89,7 @@ void Browser::nextItem(bool forceRewind) {
         currentItem = currentLevel->getCurrentItem();
     }
 
-    updatePresentationDelegate(forceRewind);
+    updatePresentationDelegate();
 }
 
 void Browser::executeItem() {
@@ -132,8 +119,7 @@ void Browser::executeItem() {
 #endif
                     if (currentItem->getActionModule() == SCASE1_MODULE_BROWSER) {
                         QMetaObject::invokeMethod(this, currentItem->getActionName().toLatin1().constData());
-                        //TODO: check if has to be removed
-                        startTimer();
+                        actionDidFinish();
                     } else {
                         emit executeActionFromPlugin(currentItem->getActionModule(), currentItem->getActionName());
                     }
@@ -152,8 +138,8 @@ void Browser::goToPreviousStop() {
     goToPreviousLevel(true);
 }
 
-void Browser::goToPreviousLevel(bool waitForStop, bool doPause) {
-    stopTimer();
+void Browser::goToPreviousLevel(bool waitForStop) {
+//    stopTimer();
 
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "Browser:executeItem:goToPreviousLevel:waitForStop?" << (waitForStop ? "yes":"no");
@@ -197,28 +183,49 @@ void Browser::goToPreviousLevel(bool waitForStop, bool doPause) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "Browser:executeItem:goToPreviousLevel:(FOUND):previousLevel belongs to?" << ((previousLevel->getContainer() != NULL) ? previousLevel->getContainer()->getPresentationData() : "NULL");
 #endif
-    setCurrentLevel(previousLevel, doPause);
+    setCurrentLevel(previousLevel);
 }
 
-void Browser::goToLevel(IBrowserLevel *level) {
-    if (level == NULL) {
+void Browser::goToLevel(IBrowserLevel *ilevel) {
+    if (ilevel == NULL) {
         setCurrentLevel(rootLevel);
     } else {
-        setCurrentLevel(static_cast<BrowserLevel *>(level));
+        BrowserLevel *testLevel;
+        BrowserLevel *level = static_cast<BrowserLevel *>(ilevel);
+        QStack <BrowserLevel *>::const_iterator i;
+
+        bool found = false;
+
+        for (i = levelStack.begin(); i != levelStack.end(); ++i) {
+            testLevel = (*i);
+            if (testLevel == level) {
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            do {
+                testLevel = levelStack.pop();
+            } while (testLevel != level && !levelStack.isEmpty());
+        }
+
+        setCurrentLevel(level);
     }
 }
 
-void Browser::setCurrentLevel(BrowserLevel *level, bool doPause) {
+void Browser::setCurrentLevel(BrowserLevel *level) {
     currentLevel = level;
     currentLevel->reset();
     currentItem = currentLevel->getCurrentItem();
     navigationStatus = BROWSER_READ_FROM_TREE;
     levelStack.push(currentLevel);
-    updatePresentationDelegate(doPause);
+    //TODO: PAUSE HERE
+    updatePresentationDelegate();
 }
 
-void Browser::updatePresentationDelegate(bool doPause) {
-    stopTimer();
+void Browser::updatePresentationDelegate() {
+//    stopTimer();
 
     if (presentationDelegate != NULL) {
         if (navigationStatus == BROWSER_READ_FROM_TREE) {
@@ -232,22 +239,18 @@ void Browser::updatePresentationDelegate(bool doPause) {
         }
     }
 
-    if (doPause) {
-        //TODO: add pause if it exists
-#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
-    qDebug() << "Browser::updatePresentationDelegate - with pause";
-#endif
-        startTimer();
-    } else {
-        startTimer();
-    }
+    startTimer();
 }
 
-void Browser::actionDidFinish() {
+void Browser::actionDidFinish(IBrowserItem *item) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "Browser::actionDidFinish - rewinding";
 #endif
-    goToPreviousLevelWithPause();
+    if ((item != NULL) && item->hasLevelBelow()) {
+        goToLevel(item->getLevelBelow());
+    } else {
+        goToPreviousLevel();
+    }
 }
 
 void Browser::setupPluginTree(IPlugin *plugin) {
