@@ -41,6 +41,8 @@
 #include <QTextCodec>
 #include <QtCore/qmath.h>
 
+#include <locale>
+
 DocumentWriterPlugin::DocumentWriterPlugin()
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     : presageCallback(presageStdContext),
@@ -351,10 +353,6 @@ QString DocumentWriterPlugin::getName() {
     return QString(SCASE1_PLUGIN_DOCUMENTWRITER_NAME);
 }
 
-void DocumentWriterPlugin::pause() {
-
-}
-
 void DocumentWriterPlugin::write_special(QString value, QString repetitions) {
     QString dataToAdd = "";
     if (value == "space") {
@@ -513,6 +511,10 @@ void DocumentWriterPlugin::setBrowserItemDelegatePrivate(IBrowserItem *delegate)
     }
 }
 
+bool DocumentWriterPlugin::isContextValidForPrediction(std::string context) {
+    return isalnum((int)context.at(context.length() - 1));
+}
+
 void DocumentWriterPlugin::updatePresentationWidget() {
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     if (predictedItemsAdded > 0) {
@@ -528,10 +530,14 @@ void DocumentWriterPlugin::updatePresentationWidget() {
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
 
-    //TODO: add verification of 'should predict'
-    presageStdContext = presentationWidget->getPredictionContext();
+    std::string context = presentationWidget->getPredictionContext();
 
-    predictions = presage.predict();
+    if (isContextValidForPrediction(context)) {
+        presageStdContext = context;
+        predictions = presage.predict();
+    } else {
+        predictions.clear();
+    }
 
     if (predictions.size() > 0) {
         if (rootLevel != NULL) {

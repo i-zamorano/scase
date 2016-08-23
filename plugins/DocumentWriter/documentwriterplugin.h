@@ -70,7 +70,6 @@ private:
     void setBrowserItemDelegatePrivate(IBrowserItem *delegate);
 
     //DocumentWriterPlugin methods
-    Q_INVOKABLE void pause();
     Q_INVOKABLE void write_prediction(QString value);
     Q_INVOKABLE void write(QString value, QString repetitions = "1", bool isPrediction = false);
     Q_INVOKABLE void write_special(QString value, QString repetitions = "1");
@@ -92,6 +91,8 @@ private:
     void saveRecentCache();
     void saveCurrentVersion();
     void saveContentsTo(QString filepath);
+
+    bool isContextValidForPrediction(std::string context);
 
     QString getRecentCache();
     QString getContentsFrom(QString filepath);
