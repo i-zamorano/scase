@@ -530,13 +530,31 @@ void DocumentWriterPlugin::updatePresentationWidget() {
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
 
-    std::string context = presentationWidget->getPredictionContext();
+    if (presentationWidget->hasPredictionContext()) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::updatePresentationWidget has prediction context";
+#endif
+        std::string context = presentationWidget->getPredictionContext();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::updatePresentationWidget read context from presentationWidget";
+#endif
 
-    if (isContextValidForPrediction(context)) {
-        presageStdContext = context;
-        predictions = presage.predict();
+        if (isContextValidForPrediction(context)) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::updatePresentationWidget prediction context is valid";
+#endif
+            presageStdContext = context;
+            predictions = presage.predict();
+        } else {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "DocumentWriterPlugin::updatePresentationWidget prediction context is NOT valid";
+#endif
+            predictions.clear();
+        }
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     } else {
-        predictions.clear();
+    qDebug() << "DocumentWriterPlugin::updatePresentationWidget does NOT have prediction context";
+#endif
     }
 
     if (predictions.size() > 0) {

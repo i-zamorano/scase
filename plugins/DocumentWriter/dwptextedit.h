@@ -33,6 +33,7 @@ public:
     explicit DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent = 0);
 
     std::string getPredictionContext();
+    bool hasPredictionContext();
 
 signals:
 

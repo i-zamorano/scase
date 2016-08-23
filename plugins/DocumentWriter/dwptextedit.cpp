@@ -40,9 +40,13 @@ void DWPTextEdit::keyPressEvent(QKeyEvent *e) {
     }
 }
 
+bool DWPTextEdit::hasPredictionContext() {
+    return !toPlainText().isEmpty();
+}
+
 std::string DWPTextEdit::getPredictionContext() {
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "DocumentWriterPlugin.getPredictionContext:" << toPlainText();
+    qDebug() << "DWPTextEdit::getPredictionContext:" << toPlainText();
 #endif
     return toPlainText().toStdString();
 }
