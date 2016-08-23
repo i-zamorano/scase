@@ -63,8 +63,6 @@ void Browser::startTimer() {
 }
 
 void Browser::nextItem() {
-//    stopTimer();
-
     currentLevel->next();
     currentItem = currentLevel->getCurrentItem();
 
@@ -139,8 +137,6 @@ void Browser::goToPreviousStop() {
 }
 
 void Browser::goToPreviousLevel(bool waitForStop) {
-//    stopTimer();
-
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "Browser:executeItem:goToPreviousLevel:waitForStop?" << (waitForStop ? "yes":"no");
     qDebug() << "Browser:executeItem:goToPreviousLevel:levelStack.size?" << levelStack.size();
@@ -225,8 +221,6 @@ void Browser::setCurrentLevel(BrowserLevel *level) {
 }
 
 void Browser::updatePresentationDelegate() {
-//    stopTimer();
-
     if (presentationDelegate != NULL) {
         if (navigationStatus == BROWSER_READ_FROM_TREE) {
             if (currentItem == NULL) {
