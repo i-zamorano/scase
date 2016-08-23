@@ -5,7 +5,7 @@
         <!-- PREDICTORS
 	     Space separated list of predictors to use to generate predictions
         -->
-        <PREDICTORS>DefaultRecencyPredictor UserSmoothedNgramPredictor</PREDICTORS>
+        <PREDICTORS>DefaultRecencyPredictor DefaultSmoothedNgramPredictor UserSmoothedNgramPredictor</PREDICTORS>
         <!-- <PREDICTORS>DefaultSmoothedNgramPredictor UserSmoothedNgramPredictor DefaultRecencyPredictor</PREDICTORS> //-->
     </PredictorRegistry>
     <ContextTracker>

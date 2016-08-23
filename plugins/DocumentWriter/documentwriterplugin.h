@@ -67,6 +67,7 @@ protected slots:
 private:
     //IPlugin methods
     void invokeActionPrivate(const QString actionName_);
+    void setBrowserItemDelegatePrivate(IBrowserItem *delegate);
 
     //DocumentWriterPlugin methods
     Q_INVOKABLE void pause();
@@ -81,7 +82,6 @@ private:
     Q_INVOKABLE void move_cursor(QString direction, QString type);
 
     void updatePresentationWidget();
-    void updateRootLevel();
 
     void delete_content(QTextCursor::MoveOperation);
 

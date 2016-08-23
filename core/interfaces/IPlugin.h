@@ -45,7 +45,7 @@ public:
     virtual void show(QStackedWidget *container) = 0;
     virtual void hide() = 0;
     inline void setUserPath(QString userPath_) { userPath = userPath_; }
-    inline void setBrowserItemDelegate(IBrowserItem *delegate) { browserItemDelegate = delegate; }
+    inline void setBrowserItemDelegate(IBrowserItem *delegate) { browserItemDelegate = delegate; setBrowserItemDelegatePrivate(delegate); }
     inline void setBrowserDelegate(IBrowserDelegate *delegate) { browserDelegate = delegate; }
 
 protected:
@@ -55,6 +55,7 @@ protected:
     QString userPath;
 
     virtual void invokeActionPrivate(const QString actionName_) = 0;
+    virtual void setBrowserItemDelegatePrivate(IBrowserItem *delegate) = 0;
 
 };
 

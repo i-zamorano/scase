@@ -504,8 +504,8 @@ void DocumentWriterPlugin::move_cursor(QString direction, QString type) {
     updatePresentationWidget();
 }
 
-void DocumentWriterPlugin::updateRootLevel() {
-    //TODO: check deep stacking of same level
+void DocumentWriterPlugin::setBrowserItemDelegatePrivate(IBrowserItem *delegate) {
+    Q_UNUSED(delegate);
     if ((browserItemDelegate != NULL) && browserItemDelegate->hasLevelBelow()) {
         rootLevel = browserItemDelegate->getLevelBelow();
     } else {
@@ -524,8 +524,6 @@ void DocumentWriterPlugin::updatePresentationWidget() {
         predictedItemsAdded = 0;
     }
 #endif
-
-    //updateRootLevel();
 
 #ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
     std::vector< std::string > predictions;
@@ -553,11 +551,6 @@ void DocumentWriterPlugin::updatePresentationWidget() {
         }
     }
 #endif
-
-    //TODO: plugins should not handle navigation directly
-//    if (rootLevel != NULL) {
-//        browserDelegate->goToLevel(rootLevel);
-//    }
 
     presentationWidget->ensureCursorVisible();
 }
