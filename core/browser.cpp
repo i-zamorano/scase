@@ -216,8 +216,8 @@ void Browser::setCurrentLevel(BrowserLevel *level) {
     currentItem = currentLevel->getCurrentItem();
     navigationStatus = BROWSER_READ_FROM_TREE;
     levelStack.push(currentLevel);
-    //TODO: PAUSE HERE
-    updatePresentationDelegate();
+    presentationDelegate->setPresentationData(QString(""), false);
+    QTimer::singleShot(1000, this, SLOT(updatePresentationDelegate()));
 }
 
 void Browser::updatePresentationDelegate() {
