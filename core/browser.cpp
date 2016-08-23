@@ -33,6 +33,8 @@ Browser::Browser(QObject *parent) :
 }
 
 void Browser::setup() {
+    pauseDelay = 0;
+
     rootLevel = new BrowserLevel(this);
     rootLevel->setIsStop(true);
 
@@ -217,7 +219,7 @@ void Browser::setCurrentLevel(BrowserLevel *level) {
     navigationStatus = BROWSER_READ_FROM_TREE;
     levelStack.push(currentLevel);
     presentationDelegate->setPresentationData(QString(""), false);
-    QTimer::singleShot(1000, this, SLOT(updatePresentationDelegate()));
+    QTimer::singleShot(pauseDelay, this, SLOT(updatePresentationDelegate()));
 }
 
 void Browser::updatePresentationDelegate() {

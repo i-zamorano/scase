@@ -60,6 +60,8 @@ public:
 
     void actionDidFinish(IBrowserItem *item = NULL);
 
+    inline void setPauseDelay(int delay) { pauseDelay = delay; }
+
     void test();
 
 signals:
@@ -96,6 +98,8 @@ private:
 
     int itemDelay;
     QTimer *timer;
+
+    int pauseDelay;
 
     void setCurrentLevel(BrowserLevel *level);
 

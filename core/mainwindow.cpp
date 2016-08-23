@@ -112,6 +112,7 @@ void MainWindow::setup() {
 
     connect(browser, SIGNAL(ringBellSignal()), this, SLOT(ringBell()));
 
+    browser->setPauseDelay(settings->value("zone_browser/pause_after_action", "1000").toInt());
     browser->start(zoneBrowser, settings->value("zone_browser/item_presentation_time", "1000").toInt());
 
     raise();
