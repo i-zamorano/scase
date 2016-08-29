@@ -36,7 +36,7 @@ class BrowserPresentationWidget : public QLabel, public IBrowserPresentationDele
 public:
     explicit BrowserPresentationWidget(QWidget *parent = 0);
 
-    void setupStyle(QString color_, QString backgroundColor_, QString backgroundColorSpecial_, int size);
+    void setupStyle(QString color_, QString backgroundColor_, QString backgroundColorSpecial_);
     void setPresentationData(QString data, bool isSpecial);
 
     void setup();

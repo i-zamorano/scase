@@ -26,13 +26,19 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
+#include <QGraphicsDropShadowEffect>
 
 InteractionWidget::InteractionWidget(QWidget *parent) :
     QWidget(parent)
 {
     activationDelay = 500;
     setAutoFillBackground(true);
-    setStyleSheet("InteractionWidget { background-color:#999999 } InteractionWidget:hover { background-color:#009900 }");
+    setStyleSheet("InteractionWidget { background-color:#006600; border-bottom:2px solid #009900; } InteractionWidget:hover { background-color:#009900; border-bottom:2px solid #00DD00; }");
+
+    QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
+    dropShadowEffect->setBlurRadius(5);
+    dropShadowEffect->setOffset(0, 8);
+    setGraphicsEffect(dropShadowEffect);
 
     isBlocked = false;
 }

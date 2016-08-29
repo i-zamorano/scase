@@ -236,7 +236,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     int fontSize = qCeil(size / (configuredLines * 1.5f));
 
-    QString presentationWidgetStyle = QString("DWPTextEdit { font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: #%3; }").arg(QString::number(fontSize), configuredBackgroundColor, configuredColor);
+    QString presentationWidgetStyle = QString("DWPTextEdit { padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: #%3; }").arg(QString::number(fontSize), configuredBackgroundColor, configuredColor);
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:fontSize?" << fontSize;
