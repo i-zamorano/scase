@@ -25,6 +25,7 @@
 
 #include <QtCore/qmath.h>
 #include <QDebug>
+#include <QGraphicsDropShadowEffect>
 
 BrowserPresentationWidget::BrowserPresentationWidget(QWidget *parent) :
     QLabel(parent)
@@ -32,7 +33,10 @@ BrowserPresentationWidget::BrowserPresentationWidget(QWidget *parent) :
 }
 
 void BrowserPresentationWidget::setup() {
+    QGraphicsDropShadowEffect* dropShadowEffect = new QGraphicsDropShadowEffect(this);
+    dropShadowEffect->setBlurRadius(5);
     setPresentationData("", false);
+    setGraphicsEffect(dropShadowEffect);
 }
 
 void BrowserPresentationWidget::setupStyle(QString color_, QString backgroundColor_, QString backgroundColorSpecial_, int size) {
@@ -56,6 +60,6 @@ void BrowserPresentationWidget::setupStyle(QString color_, QString backgroundCol
 
 void BrowserPresentationWidget::setPresentationData(QString data, bool isSpecial) {
     setText(data);
-    setStyleSheet(QString("BrowserPresentationWidget { font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2; padding:%3px; }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor), QString::number(padding)));
+    setStyleSheet(QString("BrowserPresentationWidget { font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2; padding:%3px; border:2px solid #000000; }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor), QString::number(padding)));
 }
 

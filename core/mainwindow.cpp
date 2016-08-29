@@ -64,21 +64,21 @@ void MainWindow::setup() {
 
     int screenCount = QApplication::desktop()->screenCount();
     int screenIndex = (screenCount > 1) ? 1 : 0;
-    QRect screenres = QApplication::desktop()->screenGeometry(screenIndex);
+    screenResolution = QApplication::desktop()->screenGeometry(screenIndex);
 
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "MainWindow::setup:screenCount?" << screenCount;
     qDebug() << "MainWindow::setup:screenIndex?" << screenIndex;
-    qDebug() << "MainWindow::setup:screenres.x()?" << screenres.topLeft().x();
-    qDebug() << "MainWindow::setup:screenres.y()?" << screenres.topLeft().y();
+    qDebug() << "MainWindow::setup:screenResolution.x()?" << screenResolution.topLeft().x();
+    qDebug() << "MainWindow::setup:screenResolution.y()?" << screenResolution.topLeft().y();
 #endif
-    move(screenres.topLeft());
+    move(screenResolution.topLeft());
 
 #ifdef SCASE1_FULLSCREEN
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "MainWindow::setup:windowState before call to showFullScreen?" << windowState();
 #endif
-    resize(screenres.width(), screenres.height());
+    resize(screenResolution.width(), screenResolution.height());
     setWindowState(windowState() | Qt::WindowFullScreen);
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "MainWindow::setup:windowState after call to showFullScreen?" << windowState();
@@ -215,7 +215,7 @@ void MainWindow::setupInterface() {
     zoneFeedback->setStyleSheet(QString("QWidget { background-color:#%1}").arg(settings->value("general/background_color", "777777").toString().trimmed()));
 
     zoneInteraction->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    zoneBrowser->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
+    zoneBrowser->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     zoneFeedback->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     zoneBrowser->setupStyle(settings->value("zone_browser/color", "000000").toString(), settings->value("zone_browser/background_color", "ffffff").toString(), settings->value("zone_browser/background_color_special", "aaaaff").toString(), zoneBrowserSize);
@@ -229,12 +229,12 @@ void MainWindow::setupInterface() {
         layout->addWidget(zoneInteraction);
         layout->addSpacing(zoneInteractionSeparation);
         layout->addWidget(zoneFeedback);
-        layout->addSpacing(zoneBrowserSeparation);
-        layout->addWidget(zoneBrowser);
+//        layout->addSpacing(zoneBrowserSeparation);
+//        layout->addWidget(zoneBrowser);
     } else {
         layout->setSpacing(0);
-        layout->addWidget(zoneBrowser);
-        layout->addSpacing(zoneBrowserSeparation);
+//        layout->addWidget(zoneBrowser);
+//        layout->addSpacing(zoneBrowserSeparation);
         layout->addWidget(zoneFeedback);
         layout->addSpacing(zoneInteractionSeparation);
         layout->addWidget(zoneInteraction);
@@ -246,6 +246,15 @@ void MainWindow::setupInterface() {
     centralWidget->setLayout(layout);
 
     setCentralWidget(centralWidget);
+
+    int w = screenResolution.width() - 200;
+    int h = 200;
+    int x = screenResolution.topLeft().x() + ((screenResolution.width() - w) / 2);
+    int y = (((screenResolution.height() - h) / 4) * 3) + screenResolution.topLeft().y();
+
+    zoneBrowser->setGeometry(x, y, w, h);
+    zoneBrowser->show();
+    zoneBrowser->raise();
 }
 
 void MainWindow::setupPlugins() {

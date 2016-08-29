@@ -32,6 +32,7 @@
 #include <QResizeEvent>
 #include <QSettings>
 #include <QFile>
+#include <QRect>
 
 #include "interfaces/IPlugin.h"
 
@@ -82,6 +83,8 @@ private:
     QSettings *settings;
 
     IPlugin *currentPlugin;
+
+    QRect screenResolution;
 };
 
 #endif // MAINWINDOW_H
