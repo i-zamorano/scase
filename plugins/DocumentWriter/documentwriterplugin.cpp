@@ -254,6 +254,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     if (configuredAutoLoad) {
         presentationWidget->setText(getRecentCache());
+        presentationWidget->placeCursorOnTopOfViewport();
     }
 
     QTextCursor cursor = presentationWidget->textCursor();
