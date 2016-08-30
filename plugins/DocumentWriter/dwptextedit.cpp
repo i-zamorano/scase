@@ -29,17 +29,27 @@
 #include <QScrollBar>
 
 DWPTextEdit::DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent) :
-    QTextEdit(parent)
+    QPlainTextEdit(parent)
 {
     ignoreKeypresses = pIgnoreKeyPresses;
+    setCenterOnScroll(true);
+    ensureCursorVisible();
 }
 
 void DWPTextEdit::keyPressEvent(QKeyEvent *e) {
     if (ignoreKeypresses) {
         e->ignore();
     } else {
-        QTextEdit::keyPressEvent(e);
+        QPlainTextEdit::keyPressEvent(e);
     }
+}
+
+void DWPTextEdit::setText(const QString &text) {
+    setPlainText(text);
+}
+
+void DWPTextEdit::insertText(const QString &text) {
+    insertPlainText(text);
 }
 
 bool DWPTextEdit::hasPredictionContext() {

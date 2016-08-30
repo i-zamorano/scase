@@ -64,7 +64,7 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
     presentationWidget = new DWPTextEdit(settings->value("presentation/ignore_keypresses", false).toBool());
 
-    presentationWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    //presentationWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     presentationWidget->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     presentationWidget->setUndoRedoEnabled(true);
     presentationWidget->ensureCursorVisible();

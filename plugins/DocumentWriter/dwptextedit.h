@@ -24,9 +24,9 @@
 #ifndef DWPTEXTEDIT_H
 #define DWPTEXTEDIT_H
 
-#include <QTextEdit>
+#include <QPlainTextEdit>
 
-class DWPTextEdit : public QTextEdit
+class DWPTextEdit : public QPlainTextEdit
 {
     Q_OBJECT
 public:
@@ -34,6 +34,9 @@ public:
 
     std::string getPredictionContext();
     bool hasPredictionContext();
+
+    void setText(const QString &text);
+    void insertText(const QString &text);
 
 signals:
 
