@@ -41,6 +41,7 @@ public:
 signals:
 
 public slots:
+    void onTextChanged();
 
 private:
     bool ignoreKeypresses;

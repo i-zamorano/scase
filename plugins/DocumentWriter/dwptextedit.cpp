@@ -34,6 +34,8 @@ DWPTextEdit::DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent) :
     ignoreKeypresses = pIgnoreKeyPresses;
     setCenterOnScroll(true);
     ensureCursorVisible();
+
+    connect(this, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
 }
 
 void DWPTextEdit::keyPressEvent(QKeyEvent *e) {
@@ -63,3 +65,13 @@ std::string DWPTextEdit::getPredictionContext() {
     return toPlainText().toStdString();
 }
 
+void DWPTextEdit::onTextChanged() {
+    int verticalCenterTop = cursorRect().height();
+    while (cursorRect().y() > verticalCenterTop) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+        qDebug() << "DWPTextEdit::onTextChanged: " << QString::number(cursorRect().y());
+#endif
+        QScrollBar *sb = verticalScrollBar();
+        sb->setValue(sb->value() + cursorRect().height());
+    }
+}

@@ -189,18 +189,18 @@ void MainWindow::setupInterface() {
     int w, h, x, y;
 
     w = screenResolution.width();
-    h = screenResolution.height();
-    x = screenResolution.topLeft().x();
-    y = screenResolution.topLeft().y();
-
-    zoneFeedback->setGeometry(x, y, w, h);
-
-    w = screenResolution.width();
     h = zoneInteractionSize;
     x = screenResolution.topLeft().x();
     y = screenResolution.topLeft().y();
 
     zoneInteraction->setGeometry(x, y, w, h);
+
+    w = screenResolution.width();
+    h = screenResolution.height() - zoneInteraction->height();
+    x = screenResolution.topLeft().x();
+    y = screenResolution.topLeft().y() + zoneInteraction->height();
+
+    zoneFeedback->setGeometry(x, y, w, h);
 
     w = screenResolution.width() - 100;
     h = zoneBrowserSize;
