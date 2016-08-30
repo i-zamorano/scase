@@ -62,6 +62,6 @@ void BrowserPresentationWidget::setupStyle(QString color_, QString backgroundCol
 
 void BrowserPresentationWidget::setPresentationData(QString data, bool isSpecial) {
     setText(data);
-    setStyleSheet(QString("BrowserPresentationWidget { color:#333333; font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2; padding:%3px; border-top:2px solid #000000; border-bottom:2px solid #000000; }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor), QString::number(padding)));
+    setStyleSheet(QString("BrowserPresentationWidget { color:#%4; font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2; padding:%3px; border-top:2px solid #000000; border-bottom:2px solid #000000; }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor), QString::number(padding), color));
 }
 

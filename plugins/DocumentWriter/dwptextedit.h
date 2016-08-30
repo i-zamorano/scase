@@ -34,12 +34,10 @@ public:
 
     std::string getPredictionContext();
     bool hasPredictionContext();
-    void placeCursorOnTopOfViewport();
 
 signals:
 
 public slots:
-    void onTextChanged();
 
 private:
     bool ignoreKeypresses;

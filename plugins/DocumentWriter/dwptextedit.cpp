@@ -26,13 +26,12 @@
 #include <QKeyEvent>
 #include <QDebug>
 #include <QRect>
+#include <QScrollBar>
 
 DWPTextEdit::DWPTextEdit(bool pIgnoreKeyPresses, QTextEdit *parent) :
     QTextEdit(parent)
 {
     ignoreKeypresses = pIgnoreKeyPresses;
-
-    connect(this, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
 }
 
 void DWPTextEdit::keyPressEvent(QKeyEvent *e) {
@@ -54,18 +53,3 @@ std::string DWPTextEdit::getPredictionContext() {
     return toPlainText().toStdString();
 }
 
-void DWPTextEdit::onTextChanged() {
-#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "DWPTextEdit::textChanged";
-#endif
-    placeCursorOnTopOfViewport();
-}
-
-void DWPTextEdit::placeCursorOnTopOfViewport() {
-    while (cursorRect().y() > 100) {
-#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "DWPTextEdit::placeCursorOnTopOfViewport: start y = " << QString::number(cursorRect().y());
-#endif
-        scrollContentsBy(0, -1 * cursorRect().y());
-    }
-}

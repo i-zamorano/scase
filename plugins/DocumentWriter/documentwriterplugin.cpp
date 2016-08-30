@@ -231,7 +231,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
     }
 
     if (size > containerSize) {
-        size = containerSize;
+        size = containerSize - 300;
     }
 
     int fontSize = qCeil(size / (configuredLines * 1.5f));
@@ -254,7 +254,6 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     if (configuredAutoLoad) {
         presentationWidget->setText(getRecentCache());
-        presentationWidget->placeCursorOnTopOfViewport();
     }
 
     QTextCursor cursor = presentationWidget->textCursor();
