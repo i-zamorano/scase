@@ -245,7 +245,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     presentationWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     presentationWidget->setStyleSheet(presentationWidgetStyle);
-    presentationWidget->setCursorWidth(fontSize);
+    presentationWidget->setCursorWidth(10);
     presentationWidget->setFixedHeight(size);
 
     autosave = configuredAutoSave;
@@ -575,6 +575,4 @@ void DocumentWriterPlugin::updatePresentationWidget() {
         }
     }
 #endif
-
-    presentationWidget->ensureCursorVisible();
 }

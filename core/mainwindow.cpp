@@ -179,6 +179,7 @@ void MainWindow::setupInterface() {
 
     int zoneInteractionSize = settings->value("zone_interaction/size", "100").toInt();
     int zoneBrowserSize = settings->value("zone_browser/size", "100").toInt();
+    int zoneInteractionSeparationSize = settings->value("zone_interaction/separation", "100").toInt();
 
     zoneFeedback->setStyleSheet(QString("QWidget { background-color:#ffffff; }"));
 
@@ -186,7 +187,7 @@ void MainWindow::setupInterface() {
     zoneBrowser->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     zoneFeedback->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    int w, h, x, y;
+    int w, h, x, y, vOffset;
 
     w = screenResolution.width();
     h = zoneInteractionSize;
@@ -196,9 +197,9 @@ void MainWindow::setupInterface() {
     zoneInteraction->setGeometry(x, y, w, h);
 
     w = screenResolution.width();
-    h = screenResolution.height() - zoneInteraction->height();
+    h = screenResolution.height() - zoneInteraction->height() - zoneInteractionSeparationSize;
     x = screenResolution.topLeft().x();
-    y = screenResolution.topLeft().y() + zoneInteraction->height();
+    y = screenResolution.topLeft().y() + zoneInteraction->height() + zoneInteractionSeparationSize;
 
     zoneFeedback->setGeometry(x, y, w, h);
 
