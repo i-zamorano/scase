@@ -40,6 +40,8 @@
 #include <QStringList>
 #include <QTextCodec>
 #include <QtCore/qmath.h>
+#include <QTextCharFormat>
+#include <QColor>
 
 #include <locale>
 
@@ -64,7 +66,6 @@ DocumentWriterPlugin::DocumentWriterPlugin()
 
     presentationWidget = new DWPTextEdit(settings->value("presentation/ignore_keypresses", false).toBool());
 
-    //presentationWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     presentationWidget->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     presentationWidget->setUndoRedoEnabled(true);
     presentationWidget->ensureCursorVisible();
@@ -178,6 +179,7 @@ void DocumentWriterPlugin::saveContentsTo(QString filepath) {
 
 void DocumentWriterPlugin::setupOutputWidget() {
     QString configuredColor = settings->value("presentation/color", "000000").toString().trimmed();
+    QString configuredCursorColor = settings->value("presentation/cursor_color", "ff0000").toString().trimmed();
     QString configuredBackgroundColor = settings->value("presentation/background_color", "ffffff").toString().trimmed();
     QString configuredSize = settings->value("presentation/size", "100%").toString().trimmed();
     int configuredLines = settings->value("presentation/lines", 5).toInt();
@@ -236,7 +238,10 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     int fontSize = qCeil(size / (configuredLines * 1.5f));
 
-    QString presentationWidgetStyle = QString("DWPTextEdit { padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: #%3; }").arg(QString::number(fontSize), configuredBackgroundColor, configuredColor);
+    QColor color = QColor(QString("#%1").arg(configuredColor));
+    QColor cursorColor = QColor(QString("#%1").arg(configuredCursorColor));
+
+    QString presentationWidgetStyle = QString("DWPTextEdit { padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: rgba(%3, %4, %5, 128); }").arg(QString::number(fontSize), configuredBackgroundColor, QString::number(cursorColor.red()), QString::number(cursorColor.green()), QString::number(cursorColor.blue())); //configuredColor
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:fontSize?" << fontSize;
@@ -247,6 +252,10 @@ void DocumentWriterPlugin::setupOutputWidget() {
     presentationWidget->setStyleSheet(presentationWidgetStyle);
     presentationWidget->setCursorWidth(10);
     presentationWidget->setFixedHeight(size);
+
+    QTextCharFormat fmt;
+    fmt.setForeground(QBrush(color));
+    presentationWidget->mergeCurrentCharFormat(fmt);
 
     autosave = configuredAutoSave;
 
