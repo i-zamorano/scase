@@ -96,6 +96,7 @@ void MainWindow::setup() {
     settings = new QSettings(dataDirPath + "config.ini", QSettings::IniFormat, this);
 
     bell = new QSound(dataDirPath + "bell.wav", this);
+    click = new QSound(dataDirPath + "click.wav", this);
 
     browser = new Browser(this);
 
@@ -164,6 +165,7 @@ void MainWindow::setupInterface() {
     zoneBrowser = new BrowserPresentationWidget(this);
     zoneInteraction = new InteractionWidget(this);
 
+    connect(zoneInteraction, SIGNAL(activated()), this, SLOT(clickSound()), Qt::UniqueConnection);
     connect(zoneInteraction, SIGNAL(activated()), browser, SLOT(executeItem()), Qt::UniqueConnection);
     connect(zoneInteraction, SIGNAL(userHasEntered()), browser, SLOT(stopTimer()), Qt::UniqueConnection);
     connect(zoneInteraction, SIGNAL(userHasLeft()), browser, SLOT(startTimer()), Qt::UniqueConnection);
@@ -271,4 +273,12 @@ void MainWindow::ringBell() {
 #endif
     bell->stop();
     bell->play();
+}
+
+void MainWindow::clickSound() {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "MainWindow::clickSound:click->fileName" << click->fileName();
+#endif
+    click->stop();
+    click->play();
 }

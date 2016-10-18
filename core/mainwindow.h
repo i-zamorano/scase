@@ -55,6 +55,7 @@ public slots:
     void pluginSelected(IPlugin *plugin);
     void logAction(QString action, QString message = "");
     void ringBell();
+    void clickSound();
 
 private:
     void keyPressEvent(QKeyEvent *event);
@@ -79,6 +80,7 @@ private:
     BrowserPresentationWidget *zoneBrowser;
 
     QSound *bell;
+    QSound *click;
 
     QSettings *settings;
 
