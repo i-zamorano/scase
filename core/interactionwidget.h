@@ -26,6 +26,8 @@
 
 #include <QWidget>
 #include <QTime>
+#include <QTimer>
+#include <QProgressBar>
 
 class InteractionWidget : public QWidget
 {
@@ -36,12 +38,15 @@ public:
     inline void setActivationDelay(int activationDelay_) { activationDelay = activationDelay_; }
     inline int getActivationDelay() { return activationDelay; }
 
+    void setGeometry(int x, int y, int w, int h);
+
 signals:
     void userHasEntered();
     void userHasLeft();
     void activated();
 
 public slots:
+    void setProgressValue();
 
 protected:
     void enterEvent(QEvent *);
@@ -50,9 +55,14 @@ protected:
 
 private:
     int activationDelay;
+    int timerInterval;
+    int runningActivationTime;
+
     bool isBlocked;
 
     QTime stopwatch;
+    QTimer *timer;
+    QProgressBar *progressBar;
 
 };
 

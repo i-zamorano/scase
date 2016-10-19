@@ -32,6 +32,8 @@ InteractionWidget::InteractionWidget(QWidget *parent) :
     QWidget(parent)
 {
     activationDelay = 500;
+    timerInterval = 10;
+
     setAutoFillBackground(true);
     setStyleSheet("InteractionWidget { background-color:#006600; border-bottom:2px solid #009900; } InteractionWidget:hover { background-color:#009900; border-bottom:2px solid #00DD00; }");
 
@@ -41,10 +43,37 @@ InteractionWidget::InteractionWidget(QWidget *parent) :
     setGraphicsEffect(dropShadowEffect);
 
     isBlocked = false;
+
+    timer = new QTimer(this);
+    timer->setInterval(timerInterval);
+    timer->setSingleShot(false);
+
+    progressBar = new QProgressBar(this);
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(activationDelay);
+    progressBar->setTextVisible(false);
+
+    connect(timer, SIGNAL(timeout()), this, SLOT(setProgressValue()));
+}
+
+void InteractionWidget::setGeometry(int x, int y, int w, int h)
+{
+    QWidget::setGeometry(x, y, w, h);
+    progressBar->setGeometry(0, 0, w, 25);
+}
+
+void InteractionWidget::setProgressValue() {
+    runningActivationTime += timerInterval;
+    #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "InteractionWidget::setProgressValue to " << QString::number(runningActivationTime);
+#endif
+    progressBar->setValue(runningActivationTime);
 }
 
 void InteractionWidget::enterEvent(QEvent *) {
+    runningActivationTime = 0;
     stopwatch.start();
+    timer->start();
     emit userHasEntered();
 }
 
@@ -69,6 +98,9 @@ void InteractionWidget::leaveEvent(QEvent *) {
         qDebug() << "InteractionWidget::leaveEvent has been called [end]";
 #endif
     }
+    timer->stop();
+    progressBar->setValue(0);
+    runningActivationTime = 0;
     isBlocked = false;
 }
 
