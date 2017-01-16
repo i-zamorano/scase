@@ -41,8 +41,6 @@ public:
 signals:
 
 public slots:
-    void onTextChanged();
-    void centerCursor();
 
 private:
     bool ignoreKeypresses;

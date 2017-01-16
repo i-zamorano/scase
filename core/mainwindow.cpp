@@ -199,7 +199,7 @@ void MainWindow::setupInterface() {
     zoneInteraction->setGeometry(x, y, w, h);
 
     w = screenResolution.width();
-    h = screenResolution.height() - zoneInteraction->height() - zoneInteractionSeparationSize;
+    h = screenResolution.height() - zoneInteraction->height() - zoneInteractionSeparationSize - zoneBrowserSize;
     x = screenResolution.topLeft().x();
     y = screenResolution.topLeft().y() + zoneInteraction->height() + zoneInteractionSeparationSize;
 
@@ -208,7 +208,7 @@ void MainWindow::setupInterface() {
     w = screenResolution.width() - 100;
     h = zoneBrowserSize;
     x = screenResolution.topLeft().x() + ((screenResolution.width() - w) / 2);
-    y = screenResolution.topLeft().y() + (((screenResolution.height() - h) / 6) * 5);
+    y = screenResolution.topLeft().y() + (((screenResolution.height() - h) / 6) * 5.5);
 
     zoneBrowser->setGeometry(x, y, w, h);
 
