@@ -69,6 +69,7 @@ signals:
     void pluginSelected(IPlugin *plugin);
     void executeActionFromPlugin(QString moduleName, QString actionName);
     void ringBellSignal();
+    void isBackToRoot();
 
 public slots:
     void nextItem();

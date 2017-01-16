@@ -181,6 +181,11 @@ void Browser::goToPreviousLevel(bool waitForStop) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
     qDebug() << "Browser:executeItem:goToPreviousLevel:(FOUND):previousLevel belongs to?" << ((previousLevel->getContainer() != NULL) ? previousLevel->getContainer()->getPresentationData() : "NULL");
 #endif
+
+    if (previousLevel == rootLevel) {
+        emit isBackToRoot();
+    }
+
     setCurrentLevel(previousLevel);
 }
 

@@ -112,6 +112,7 @@ void MainWindow::setup() {
     setupPlugins();
 
     connect(browser, SIGNAL(ringBellSignal()), this, SLOT(ringBell()));
+    connect(browser, SIGNAL(isBackToRoot()), this, SLOT(backToRoot()));
 
     browser->setPauseDelay(settings->value("zone_browser/pause_after_action", "1000").toInt());
     browser->start(zoneBrowser, settings->value("zone_browser/item_presentation_time", "1000").toInt());
@@ -265,6 +266,7 @@ void MainWindow::pluginSelected(IPlugin *plugin) {
 void MainWindow::hideCurrentPlugin() {
     if (currentPlugin != NULL) {
         currentPlugin->hide();
+        currentPlugin = NULL;
     }
 }
 
@@ -282,4 +284,9 @@ void MainWindow::clickSound() {
 #endif
     click->stop();
     click->play();
+}
+
+void MainWindow::backToRoot()
+{
+    hideCurrentPlugin();
 }

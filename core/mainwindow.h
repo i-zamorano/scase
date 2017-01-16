@@ -56,6 +56,7 @@ public slots:
     void logAction(QString action, QString message = "");
     void ringBell();
     void clickSound();
+    void backToRoot();
 
 private:
     void keyPressEvent(QKeyEvent *event);
