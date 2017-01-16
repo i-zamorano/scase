@@ -1,4 +1,4 @@
-<item name='ESCRIBIR'>
+﻿<item name='ESCRIBIR'>
 	<level>
 		<item name='ESPACIO'>
 			<action>write_special,space</action>
@@ -49,13 +49,16 @@
 		</item>
 		<item name='CONSONANTES'>
 			<level>
-				<item name='B, C, D, F, G'>
+				<item name='B, C, CH, D, F, G'>
 					<level>
 						<item name="B">
 							<action>write,B</action>
 						</item>
 						<item name="C">
 							<action>write,C</action>
+						</item>
+						<item name="CH">
+							<action>write,CH</action>
 						</item>
 						<item name="D">
 							<action>write,D</action>
@@ -68,7 +71,7 @@
 						</item>
 					</level>
 				</item>
-				<item name="H, J, K, L, M, N">
+				<item name="H, J, K, L, LL, M">
 					<level>
 						<item name="H">
 							<action>write,H</action>
@@ -82,16 +85,19 @@
 						<item name="L">
 							<action>write,L</action>
 						</item>
+						<item name="LL">
+							<action>write,LL</action>
+						</item>
 						<item name="M">
 							<action>write,M</action>
 						</item>
+					</level>
+				</item>
+				<item name="N, Ñ, P, Q, R, S">
+					<level>
 						<item name="N">
 							<action>write,N</action>
 						</item>
-					</level>
-				</item>
-				<item name="Ñ, P, Q, R, S, T">
-					<level>
 						<item name="Ñ">
 							<action>write,Ñ</action>
 						</item>
@@ -107,13 +113,13 @@
 						<item name="S">
 							<action>write,S</action>
 						</item>
+					</level>
+				</item>
+				<item name="T, V, W, X, Y, Z">
+					<level>
 						<item name="T">
 							<action>write,T</action>
 						</item>
-					</level>
-				</item>
-				<item name="V, W, X, Y, Z">
-					<level>
 						<item name="V">
 							<action>write,V</action>
 						</item>
@@ -181,7 +187,7 @@
 		<item name='BORRAR LETRA'>
 			<action>delete_previous_character</action>
 		</item>
-		<item name='PUNTUACIÓN'>
+		<item name='PUNTUACIÓN 1'>
 			<level>
 				<item name='. (punto)'>
 					<action>write_special,period</action>
@@ -197,6 +203,31 @@
 				</item>
 				<item name='... (puntos suspensivos)'>
 					<action>write_special,period,3</action>
+				</item>
+			</level>
+		</item>
+		<item name='PUNTUACIÓN 2'>
+			<level>
+				<item name='¿ (abrir pregunta)'>
+					<action>write,¿</action>
+				</item>
+				<item name='? (cerrar pregunta)'>
+					<action>write,?</action>
+				</item>
+				<item name='¡ (abrir exclamación)'>
+					<action>write,¡</action>
+				</item>
+				<item name='! (cerrar exclamación)'>
+					<action>write,!</action>
+				</item>
+				<item name='" (comillas)'>
+					<action>write,“</action>
+				</item>
+				<item name='( (abrir paréntesis)'>
+					<action>write,(</action>
+				</item>
+				<item name=') (cerrar paréntesis)'>
+					<action>write,(</action>
 				</item>
 			</level>
 		</item>
