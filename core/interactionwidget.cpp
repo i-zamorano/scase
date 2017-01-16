@@ -27,12 +27,16 @@
 #include <QPainter>
 #include <QDebug>
 #include <QGraphicsDropShadowEffect>
+#include <QTimer>
 
 InteractionWidget::InteractionWidget(QWidget *parent) :
     QWidget(parent)
 {
     activationDelay = 500;
+    refractoryPeriod = 0;
     timerInterval = 10;
+    hasEntered = false;
+    isBlocked = false;
 
     setAutoFillBackground(true);
     setStyleSheet("InteractionWidget { background-color:#006600; border-bottom:2px solid #009900; } InteractionWidget:hover { background-color:#009900; border-bottom:2px solid #00DD00; }");
@@ -41,8 +45,6 @@ InteractionWidget::InteractionWidget(QWidget *parent) :
     dropShadowEffect->setBlurRadius(5);
     dropShadowEffect->setOffset(0, 8);
     setGraphicsEffect(dropShadowEffect);
-
-    isBlocked = false;
 
     timer = new QTimer(this);
     timer->setInterval(timerInterval);
@@ -67,26 +69,43 @@ void InteractionWidget::setProgressValue() {
     #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
         qDebug() << "InteractionWidget::setProgressValue to " << QString::number(runningActivationTime);
 #endif
-    progressBar->setValue(runningActivationTime);
+        progressBar->setValue(runningActivationTime);
+}
+
+void InteractionWidget::block()
+{
+    isBlocked = true;
+}
+
+void InteractionWidget::unblock()
+{
+    isBlocked = false;
 }
 
 void InteractionWidget::enterEvent(QEvent *) {
-    runningActivationTime = 0;
-    stopwatch.start();
-    timer->start();
-    emit userHasEntered();
+    if (!isBlocked) {
+        hasEntered = true;
+        runningActivationTime = 0;
+        stopwatch.start();
+        timer->start();
+        emit userHasEntered();
+    }
 }
 
 void InteractionWidget::leaveEvent(QEvent *) {
+    bool unblockLater = false;
+
     if (!isBlocked) {
-        isBlocked = true;
+        block();
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
         qDebug() << "InteractionWidget::leaveEvent has been called [begin]";
 #endif
-        if (stopwatch.elapsed() >= activationDelay) {
+        if (hasEntered && (stopwatch.elapsed() >= activationDelay)) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
             qDebug() << "InteractionWidget::leaveEvent has been called with an activation";
 #endif
+            unblockLater = true;
+
             emit activated();
         } else {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
@@ -98,10 +117,17 @@ void InteractionWidget::leaveEvent(QEvent *) {
         qDebug() << "InteractionWidget::leaveEvent has been called [end]";
 #endif
     }
+
+    hasEntered = false;
     timer->stop();
     progressBar->setValue(0);
     runningActivationTime = 0;
-    isBlocked = false;
+
+    if (unblockLater) {
+        QTimer::singleShot(refractoryPeriod, this, SLOT(unblock()));
+    } else {
+        unblock();
+    }
 }
 
 void InteractionWidget::paintEvent(QPaintEvent *) {

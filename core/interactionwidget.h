@@ -38,6 +38,8 @@ public:
     inline void setActivationDelay(int activationDelay_) { activationDelay = activationDelay_; }
     inline int getActivationDelay() { return activationDelay; }
 
+    inline void setRefractoryPeriod(int refractoryPeriod_) { refractoryPeriod = refractoryPeriod_; }
+
     void setGeometry(int x, int y, int w, int h);
 
 signals:
@@ -47,6 +49,8 @@ signals:
 
 public slots:
     void setProgressValue();
+    void block();
+    void unblock();
 
 protected:
     void enterEvent(QEvent *);
@@ -57,8 +61,10 @@ private:
     int activationDelay;
     int timerInterval;
     int runningActivationTime;
+    int refractoryPeriod;
 
     bool isBlocked;
+    bool hasEntered;
 
     QTime stopwatch;
     QTimer *timer;

@@ -178,7 +178,7 @@ void MainWindow::setupInterface() {
 #endif
 
     zoneInteraction->setActivationDelay(settings->value("zone_interaction/dwell_time", "500").toInt());
-
+    zoneInteraction->setRefractoryPeriod(settings->value("zone_interaction/refractory_period", "500").toInt());
     int zoneInteractionSize = settings->value("zone_interaction/size", "100").toInt();
     int zoneBrowserSize = settings->value("zone_browser/size", "100").toInt();
     int zoneInteractionSeparationSize = settings->value("zone_interaction/separation", "100").toInt();
@@ -214,7 +214,7 @@ void MainWindow::setupInterface() {
 
     zoneBrowser->setupStyle(settings->value("zone_browser/color", "000000").toString(), settings->value("zone_browser/background_color", "ffffff").toString(), settings->value("zone_browser/background_color_special", "aaaaff").toString());
     zoneBrowser->setup();
-    zoneBrowser->setSpeechRate(settings->value("zone_browser/speech_rate", 0.0).toDouble());
+    zoneBrowser->setSpeechRate(settings->value("zone_browser/speech_rate", "0.0").toDouble());
 
     zoneBrowser->show();
     zoneBrowser->raise();
