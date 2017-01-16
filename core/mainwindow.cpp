@@ -189,7 +189,7 @@ void MainWindow::setupInterface() {
     zoneBrowser->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     zoneFeedback->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    int w, h, x, y, vOffset;
+    int w, h, x, y;
 
     w = screenResolution.width();
     h = zoneInteractionSize;
@@ -214,6 +214,7 @@ void MainWindow::setupInterface() {
 
     zoneBrowser->setupStyle(settings->value("zone_browser/color", "000000").toString(), settings->value("zone_browser/background_color", "ffffff").toString(), settings->value("zone_browser/background_color_special", "aaaaff").toString());
     zoneBrowser->setup();
+    zoneBrowser->setSpeechRate(settings->value("zone_browser/speech_rate", 0.0).toDouble());
 
     zoneBrowser->show();
     zoneBrowser->raise();

@@ -26,6 +26,8 @@
 
 #include <QLabel>
 
+#include <QTextToSpeech>
+
 #include "interfaces/IBrowserPresentationDelegate.h"
 
 class BrowserPresentationWidget : public QLabel, public IBrowserPresentationDelegate
@@ -36,6 +38,7 @@ class BrowserPresentationWidget : public QLabel, public IBrowserPresentationDele
 public:
     explicit BrowserPresentationWidget(QWidget *parent = 0);
 
+    void setSpeechRate(double speechRate);
     void setupStyle(QString color_, QString backgroundColor_, QString backgroundColorSpecial_);
     void setPresentationData(QString data, bool isSpecial);
 
@@ -49,6 +52,9 @@ private:
     QString color;
     QString backgroundColor;
     QString backgroundColorSpecial;
+
+    QTextToSpeech *m_speech;
+
     int fontSize;
     int padding;
 };

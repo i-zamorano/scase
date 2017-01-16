@@ -6,7 +6,7 @@
 
 QT       += core gui xml multimedia
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets texttospeech
 
 DEFINES += SCASE1_FULLSCREEN
 
@@ -21,6 +21,8 @@ CONFIG += x86_64
 CONFIG -= x86
 
 CONFIG += c++11
+
+QMAKE_MAC_SDK = MacOSX
 
 QMAKE_LFLAGS += -Wall
 QMAKE_CFLAGS += -g -O0

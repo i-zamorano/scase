@@ -19,6 +19,8 @@ CONFIG -= x86
 CONFIG += c++11
 CONFIG += plugin
 
+QMAKE_MAC_SDK = MacOSX
+
 QMAKE_LFLAGS += -Wall
 QMAKE_CFLAGS += -g -O0
 

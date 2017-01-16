@@ -28,8 +28,14 @@
 #include <QGraphicsDropShadowEffect>
 
 BrowserPresentationWidget::BrowserPresentationWidget(QWidget *parent) :
-    QLabel(parent)
+    QLabel(parent),
+    m_speech(0)
 {
+}
+
+void BrowserPresentationWidget::setSpeechRate(double speechRate)
+{
+    m_speech->setRate(speechRate);
 }
 
 void BrowserPresentationWidget::setup() {
@@ -37,6 +43,12 @@ void BrowserPresentationWidget::setup() {
     dropShadowEffect->setBlurRadius(5);
     dropShadowEffect->setOffset(0, 8);
     setGraphicsEffect(dropShadowEffect);
+
+    m_speech = new QTextToSpeech(this);
+
+    QVoice voice = m_speech->voice();
+    QLocale locale = m_speech->locale();
+
     setPresentationData("", false);
 }
 
@@ -63,5 +75,9 @@ void BrowserPresentationWidget::setupStyle(QString color_, QString backgroundCol
 void BrowserPresentationWidget::setPresentationData(QString data, bool isSpecial) {
     setText(data);
     setStyleSheet(QString("BrowserPresentationWidget { color:#%4; font-size:%1px; font-family:Helvetica; font-weight:bold; background-color:#%2; padding:%3px; border-top:2px solid #000000; border-bottom:2px solid #000000; }").arg(QString::number(fontSize), ((isSpecial) ? backgroundColorSpecial : backgroundColor), QString::number(padding), color));
+
+    if (data.length() > 0) {
+        m_speech->say(data);
+    }
 }
 
