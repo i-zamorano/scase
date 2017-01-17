@@ -60,6 +60,8 @@ FileManagerPlugin::FileManagerPlugin()
     settings = new QSettings(getPluginPath() + SCASE1_PLUGIN_FILEMANAGER_SETTINGS_FILE + ".ini", QSettings::IniFormat, this);
 
     presentationWidget = new QTextEdit();
+    presentationWidget->setFrameStyle(QFrame::NoFrame);
+    presentationWidget->setWindowFlags(Qt::FramelessWindowHint);
 
     presentationWidget->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     presentationWidget->setUndoRedoEnabled(true);
@@ -77,25 +79,6 @@ void FileManagerPlugin::show(QStackedWidget *container) {
 
 void FileManagerPlugin::hide() {
     presentationWidget->hide();
-}
-
-void FileManagerPlugin::saveCurrentVersion() {
-    QDate currentDate = QDate::currentDate();
-
-    QString path = QDir::toNativeSeparators(QString("%1%2/%3").arg(documentPath, currentDate.toString("yyyy"), currentDate.toString("MM")));
-    QString filename = QString("version-%1-%2.txt").arg(currentDate.toString("dd"), QTime::currentTime().toString("HHmmss"));
-    QString filepath = QDir::toNativeSeparators(QString("%1/%2").arg(path, filename));
-
-#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "FileManagerPlugin::saveCurrentVersion:currentPath?" << QDir::currentPath();
-    qDebug() << "FileManagerPlugin::saveCurrentVersion:path?" << path;
-    qDebug() << "FileManagerPlugin::saveCurrentVersion:filename?" << filename;
-#endif
-
-    QDir dir(QDir::currentPath());
-    dir.mkpath(path);
-
-    saveContentsTo(filepath);
 }
 
 void FileManagerPlugin::saveRecentCache() {
@@ -214,7 +197,7 @@ void FileManagerPlugin::setupOutputWidget() {
 
     int fontSize = qCeil(size / (configuredLines * 1.5f));
 
-    QString presentationWidgetStyle = QString("QTextEdit { padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: #%3; }").arg(QString::number(fontSize), configuredBackgroundColor, configuredColor);
+    QString presentationWidgetStyle = QString("QTextEdit { border-width:0px; padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: #%3; }").arg(QString::number(fontSize), configuredBackgroundColor, configuredColor);
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "FileManagerPlugin::setupOutputWidget:fontSize?" << fontSize;
@@ -289,6 +272,13 @@ void FileManagerPlugin::invokeMethodPrivate(const QString actionName_) {
     }
 }
 
+void FileManagerPlugin::invokeServicePrivate(const QString serviceName_, const QString command_, QVariant payload)
+{
+    Q_UNUSED(serviceName_);
+    Q_UNUSED(command_);
+    Q_UNUSED(payload);
+}
+
 QString FileManagerPlugin::getBrowserTree() {
     QString browserTreeFile = getPluginPath() + "lang/" + settings->value("presentation/language", "en").toString().trimmed() + "/" + SCASE1_PLUGIN_FILEMANAGER_BROWSER_TREE_FILE + ".xml";
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
@@ -329,9 +319,24 @@ void FileManagerPlugin::setBrowserItemDelegatePrivate(IBrowserItem *delegate) {
 
 void FileManagerPlugin::save()
 {
+    QDate currentDate = QDate::currentDate();
+
+    QString path = QDir::toNativeSeparators(QString("%1saved").arg(documentPath));
+    QString filename = QString("saved-%1%2%3-%4.txt").arg(currentDate.toString("yyyy"), currentDate.toString("MM"), currentDate.toString("dd"), QTime::currentTime().toString("HHmmss"));
+    QString filepath = QDir::toNativeSeparators(QString("%1/%2").arg(path, filename));
+
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "save:";
+    qDebug() << "FileManagerPlugin::save:currentPath?" << QDir::currentPath();
+    qDebug() << "FileManagerPlugin::save:path?" << path;
+    qDebug() << "FileManagerPlugin::save:filename?" << filename;
 #endif
+
+    QDir dir(QDir::currentPath());
+    dir.mkpath(path);
+
+    saveContentsTo(filepath);
+
+    emit requestTransition("editor", "set_content", QVariant(presentationWidget->toPlainText()));
 }
 
 void FileManagerPlugin::load(QString value)
@@ -346,6 +351,7 @@ void FileManagerPlugin::new_file()
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "new_file:";
 #endif
+    emit requestTransition("editor", "set_content", QVariant(""));
 }
 
 void FileManagerPlugin::show_recent_cache()

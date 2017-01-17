@@ -56,6 +56,9 @@ DocumentWriterPlugin::DocumentWriterPlugin()
     browserItemDelegate = NULL;
     rootLevel = NULL;
 
+    isService_ = true;
+    serviceName = "editor";
+
     autosave = true;
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
@@ -65,6 +68,8 @@ DocumentWriterPlugin::DocumentWriterPlugin()
     settings = new QSettings(getPluginPath() + SCASE1_PLUGIN_DOCUMENTWRITER_SETTINGS_FILE + ".ini", QSettings::IniFormat, this);
 
     presentationWidget = new DWPTextEdit(settings->value("presentation/ignore_keypresses", false).toBool());
+    presentationWidget->setFrameStyle(QFrame::NoFrame);
+    presentationWidget->setWindowFlags(Qt::FramelessWindowHint);
 
     presentationWidget->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     presentationWidget->setUndoRedoEnabled(true);
@@ -238,10 +243,7 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
     int fontSize = qCeil(size / (configuredLines * 1.5f));
 
-    QColor color = QColor(QString("#%1").arg(configuredColor));
-    QColor cursorColor = QColor(QString("#%1").arg(configuredCursorColor));
-
-    QString presentationWidgetStyle = QString("DWPTextEdit { padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: rgba(%3, %4, %5, 128); }").arg(QString::number(fontSize), configuredBackgroundColor, QString::number(cursorColor.red()), QString::number(cursorColor.green()), QString::number(cursorColor.blue())); //configuredColor
+    QString presentationWidgetStyle = QString("DWPTextEdit { border-width:0px; padding:10px; font-family: Helvetica, Arial; font-size: %1px; background-color: #%2; color: #%3; }").arg(QString::number(fontSize), configuredBackgroundColor, configuredColor);
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "DocumentWriterPlugin::setupOutputWidget:fontSize?" << fontSize;
@@ -252,10 +254,6 @@ void DocumentWriterPlugin::setupOutputWidget() {
     presentationWidget->setStyleSheet(presentationWidgetStyle);
     presentationWidget->setCursorWidth(10);
     presentationWidget->setFixedHeight(size);
-
-    QTextCharFormat fmt;
-    fmt.setForeground(QBrush(color));
-    presentationWidget->mergeCurrentCharFormat(fmt);
 
     autosave = configuredAutoSave;
 
@@ -276,6 +274,56 @@ void DocumentWriterPlugin::setupOutputWidget() {
 
 QString DocumentWriterPlugin::getPluginPath() {
     return QString("plugins/");
+}
+
+void DocumentWriterPlugin::invokeServicePrivate(const QString serviceName_, const QString command_, QVariant payload) {
+    QStringList parts = serviceName_.split(",");
+
+    if (parts.size() > 0) {
+        QString methodName = command_;
+
+        QGenericArgument argumentTable[ 10 ];
+
+        QStringList signatureArguments;
+
+        argumentTable[0] = Q_ARG(QVariant, payload);
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+        qDebug() << "argumentTable[0] is " << argumentTable[0].name();
+#endif
+        signatureArguments.append("QVariant");
+
+        int i = 1;
+
+        if (i < 10) {
+            argumentTable[i] = QGenericArgument(0);
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+            qDebug() << "0:argumentTable[" << i << "] is " << argumentTable[i].name();
+#endif
+            for (i++; i < 10; i++) {
+                argumentTable[i] = QGenericArgument();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+                qDebug() << ":argumentTable[" << i << "] is " << argumentTable[i].name();
+#endif
+            }
+        }
+
+        QString signature = methodName + "(" + signatureArguments.join(",") + ")";
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+        qDebug() << "signature:" << signature;
+#endif
+
+        int methodIndex = metaObject()->indexOfMethod(signature.toLatin1().constData());
+
+        if (methodIndex > -1) {
+            QMetaMethod metaMethod = metaObject()->method(methodIndex);
+            metaMethod.invoke(this, argumentTable[0], argumentTable[1], argumentTable[2], argumentTable[3], argumentTable[4], argumentTable[5], argumentTable[6], argumentTable[7], argumentTable[8], argumentTable[9]);
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+        } else {
+            qDebug() << "signature:" << signature << "not found";
+#endif
+        }
+    }
 }
 
 void DocumentWriterPlugin::invokeMethodPrivate(const QString actionName_) {
@@ -509,6 +557,11 @@ void DocumentWriterPlugin::move_cursor(QString direction, QString type) {
     cursor.movePosition(moveOperation, QTextCursor::MoveAnchor);
     presentationWidget->setTextCursor(cursor);
     updatePresentationWidget();
+}
+
+void DocumentWriterPlugin::service_set_content(QVariant payload)
+{
+    presentationWidget->setText(payload.toString());
 }
 
 void DocumentWriterPlugin::setBrowserItemDelegatePrivate(IBrowserItem *delegate) {

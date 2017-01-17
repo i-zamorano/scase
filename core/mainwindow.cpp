@@ -162,6 +162,7 @@ void MainWindow::closeActionLogger() {
 }
 
 void MainWindow::setupInterface() {
+    this->setStyleSheet("QMainWindow { background-color: #ffffff; }");
     zoneFeedback = new QStackedWidget(this);
     zoneBrowser = new BrowserPresentationWidget(this);
     zoneInteraction = new InteractionWidget(this);
@@ -209,7 +210,7 @@ void MainWindow::setupInterface() {
     w = screenResolution.width() - 100;
     h = zoneBrowserSize;
     x = screenResolution.topLeft().x() + ((screenResolution.width() - w) / 2);
-    y = screenResolution.topLeft().y() + (((screenResolution.height() - h) / 6) * 5.5);
+    y = screenResolution.topLeft().y() + (((screenResolution.height() - h) / 6) * 5.8);
 
     zoneBrowser->setGeometry(x, y, w, h);
 
@@ -248,6 +249,7 @@ void MainWindow::setupPlugins() {
             qDebug() << "Loaded plugin" << pluginName << "from" << fileName;
 #endif
             pluginHandler->registerPlugin(pluginName, IPLUGIN(plugin), browser, zoneFeedback);
+            connect(plugin, SIGNAL(requestTransition(QString,QString,QVariant)), this, SLOT(invokeService(QString,QString,QVariant)));
         }
     }
 

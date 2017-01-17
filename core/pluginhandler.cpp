@@ -39,6 +39,13 @@ void PluginHandler::registerPlugin(const QString pluginName, IPlugin *plugin, Br
 
     directory.insert(pluginName, plugin);
 
+    if (plugin->isService()) {
+        if (services.contains(plugin->getServiceName())) {
+            services.remove(plugin->getServiceName());
+        }
+        services.insert(plugin->getServiceName(), plugin);
+    }
+
     plugin->setBrowserDelegate(browser);
     browser->setupPluginTree(plugin);
 
@@ -60,6 +67,13 @@ void PluginHandler::invokeActionFromPlugin(const QString pluginName, const QStri
 void PluginHandler::invokeFeedbackFromPlugin(const QString pluginName, const QString feedbackName) {
     if (directory.contains(pluginName)) {
         directory.value(pluginName)->invokeFeedback(feedbackName);
+    }
+}
+
+void PluginHandler::invokeService(const QString serviceName, const QString command, QVariant payload)
+{
+    if (services.contains(serviceName)) {
+        services.value(serviceName)->invokeService(QString("service_%1").arg(serviceName), command, payload);
     }
 }
 

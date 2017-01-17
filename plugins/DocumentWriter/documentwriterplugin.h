@@ -61,12 +61,16 @@ public:
     void show(QStackedWidget *container);
     void hide();
 
+signals:
+    void requestTransition(const QString serviceName, const QString command, QVariant payload);
+
 protected slots:
     void textHasChanged();
 
 private:
     //IPlugin methods
     void invokeMethodPrivate(const QString actionName_);
+    void invokeServicePrivate(const QString serviceName_, const QString command_, QVariant payload);
     void setBrowserItemDelegatePrivate(IBrowserItem *delegate);
 
     //DocumentWriterPlugin methods
@@ -79,6 +83,8 @@ private:
     Q_INVOKABLE void undo();
     Q_INVOKABLE void move_cursor(QString direction);
     Q_INVOKABLE void move_cursor(QString direction, QString type);
+
+    Q_INVOKABLE void service_set_content(QVariant payload);
 
     void updatePresentationWidget();
 

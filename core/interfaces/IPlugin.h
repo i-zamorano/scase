@@ -38,6 +38,10 @@ class IPlugin {
 public:
     inline void invokeAction(const QString actionName_) { invokeMethodPrivate(actionName_); if (browserDelegate != NULL) browserDelegate->actionDidFinish(browserItemDelegate); }
     inline void invokeFeedback(const QString feedbackName_) { invokeMethodPrivate(feedbackName_); }
+    inline void invokeService(const QString serviceName_, const QString command_, QVariant payload) { invokeServicePrivate(serviceName_, command_, payload); }
+    inline bool isService() { return isService_; }
+    inline QString getServiceName() { return serviceName; }
+
     virtual QString getBrowserTree() = 0;
     virtual QWidget *getOutputWidget() = 0;
     virtual QString getName() = 0;
@@ -45,9 +49,13 @@ public:
     virtual void setupOutputWidget() = 0;
     virtual void show(QStackedWidget *container) = 0;
     virtual void hide() = 0;
+
     inline void setUserPath(QString userPath_) { userPath = userPath_; }
     inline void setBrowserItemDelegate(IBrowserItem *delegate) { browserItemDelegate = delegate; setBrowserItemDelegatePrivate(delegate); }
     inline void setBrowserDelegate(IBrowserDelegate *delegate) { browserDelegate = delegate; }
+
+signals:
+    virtual void requestTransition(const QString serviceName, const QString command, QVariant payload) = 0;
 
 protected:
     IBrowserItem *browserItemDelegate;
@@ -55,7 +63,11 @@ protected:
 
     QString userPath;
 
+    bool isService_;
+    QString serviceName;
+
     virtual void invokeMethodPrivate(const QString actionName_) = 0;
+    virtual void invokeServicePrivate(const QString serviceName_, const QString command_, QVariant payload) = 0;
     virtual void setBrowserItemDelegatePrivate(IBrowserItem *delegate) = 0;
 
 };

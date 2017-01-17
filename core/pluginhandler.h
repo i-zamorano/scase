@@ -48,9 +48,11 @@ signals:
 public slots:
     void invokeActionFromPlugin(const QString pluginName, const QString actionName);
     void invokeFeedbackFromPlugin(const QString pluginName, const QString feedbackName);
+    void invokeService(const QString serviceName, const QString command, QVariant payload);
 
 private:
     QHash<QString, IPlugin *> directory;
+    QHash<QString, IPlugin *> services;
 
 };
 
