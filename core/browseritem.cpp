@@ -30,6 +30,7 @@ BrowserItem::BrowserItem(QObject *parent) :
     levelBelow_ = NULL;
     moduleName = NULL;
     actionName = NULL;
+    feedbackName = NULL;
     pluginDelegate = NULL;
     container = NULL;
     isSpecial_ = false;
