@@ -226,6 +226,7 @@ void MainWindow::setupPlugins() {
 
     connect(browser, SIGNAL(executeActionFromPlugin(QString,QString)), this, SLOT(logAction(QString,QString)));
     connect(browser, SIGNAL(executeActionFromPlugin(QString,QString)), pluginHandler, SLOT(invokeActionFromPlugin(QString,QString)));
+    connect(browser, SIGNAL(executeFeedbackFromPlugin(QString,QString)), pluginHandler, SLOT(invokeFeedbackFromPlugin(QString,QString)));
     connect(browser, SIGNAL(pluginSelected(IPlugin*)), this, SLOT(pluginSelected(IPlugin*)));
 
     QString pluginsDirPath = QString("plugins");

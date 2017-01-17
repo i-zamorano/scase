@@ -57,6 +57,12 @@ void PluginHandler::invokeActionFromPlugin(const QString pluginName, const QStri
     }
 }
 
+void PluginHandler::invokeFeedbackFromPlugin(const QString pluginName, const QString feedbackName) {
+    if (directory.contains(pluginName)) {
+        directory.value(pluginName)->invokeFeedback(feedbackName);
+    }
+}
+
 QWidget *PluginHandler::getOutputWidgetFromPlugin(const QString pluginName) {
     if (directory.contains(pluginName)) {
         return directory.value(pluginName)->getOutputWidget();

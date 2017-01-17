@@ -278,7 +278,7 @@ QString DocumentWriterPlugin::getPluginPath() {
     return QString("plugins/");
 }
 
-void DocumentWriterPlugin::invokeActionPrivate(const QString actionName_) {
+void DocumentWriterPlugin::invokeMethodPrivate(const QString actionName_) {
     QStringList parts = actionName_.split(",");
 
     if (parts.size() > 0) {

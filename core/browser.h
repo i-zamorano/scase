@@ -68,6 +68,7 @@ signals:
     void nextItemSelected(bool isSpecial);
     void pluginSelected(IPlugin *plugin);
     void executeActionFromPlugin(QString moduleName, QString actionName);
+    void executeFeedbackFromPlugin(QString moduleName, QString feedbackName);
     void ringBellSignal();
     void isBackToRoot();
 

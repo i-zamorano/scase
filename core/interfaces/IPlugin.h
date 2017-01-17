@@ -36,7 +36,8 @@
 class IPlugin {
 
 public:
-    inline void invokeAction(const QString actionName_) { invokeActionPrivate(actionName_); if (browserDelegate != NULL) browserDelegate->actionDidFinish(browserItemDelegate); }
+    inline void invokeAction(const QString actionName_) { invokeMethodPrivate(actionName_); if (browserDelegate != NULL) browserDelegate->actionDidFinish(browserItemDelegate); }
+    inline void invokeFeedback(const QString feedbackName_) { invokeMethodPrivate(feedbackName_); }
     virtual QString getBrowserTree() = 0;
     virtual QWidget *getOutputWidget() = 0;
     virtual QString getName() = 0;
@@ -54,7 +55,7 @@ protected:
 
     QString userPath;
 
-    virtual void invokeActionPrivate(const QString actionName_) = 0;
+    virtual void invokeMethodPrivate(const QString actionName_) = 0;
     virtual void setBrowserItemDelegatePrivate(IBrowserItem *delegate) = 0;
 
 };

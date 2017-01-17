@@ -21,8 +21,8 @@
 
     **********/
 
-#ifndef DOCUMENTWRITERPLUGIN_H
-#define DOCUMENTWRITERPLUGIN_H
+#ifndef FILEMANAGERPLUGIN_H
+#define FILEMANAGERPLUGIN_H
 
 #include <QObject>
 #include <QString>
@@ -30,27 +30,22 @@
 #include <QRegExp>
 #include <QSettings>
 #include <QtPlugin>
+#include <QTextEdit>
 
-#include "scase1_plugin_documentwriter_global.h"
+#include "scase1_plugin_filemanager_global.h"
 
 #include "interfaces/IPlugin.h"
 #include "interfaces/IBrowserLevel.h"
 #include "interfaces/IBrowserItem.h"
 
-#include "dwptextedit.h"
-
-#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
-#include "dwppresagecallback.h"
-#endif
-
-class Q_DECL_EXPORT DocumentWriterPlugin : public QObject, public IPlugin
+class Q_DECL_EXPORT FileManagerPlugin : public QObject, public IPlugin
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID SCASE1_PLUGIN_DOCUMENTWRITER_NAME)
+    Q_PLUGIN_METADATA(IID SCASE1_PLUGIN_FILEMANAGER_NAME)
     Q_INTERFACES(IPlugin)
 
 public:
-    DocumentWriterPlugin();
+    FileManagerPlugin();
 
     //IPlugin methods
     QString getBrowserTree();
@@ -62,27 +57,22 @@ public:
     void hide();
 
 protected slots:
-    void textHasChanged();
 
 private:
     //IPlugin methods
     void invokeMethodPrivate(const QString actionName_);
     void setBrowserItemDelegatePrivate(IBrowserItem *delegate);
 
-    //DocumentWriterPlugin methods
-    Q_INVOKABLE void write_prediction(QString value);
-    Q_INVOKABLE void write(QString value, QString repetitions = "1", bool isPrediction = false);
-    Q_INVOKABLE void write_special(QString value, QString repetitions = "1");
-    Q_INVOKABLE void delete_previous_character();
-    Q_INVOKABLE void delete_previous_word();
-    Q_INVOKABLE void delete_all();
-    Q_INVOKABLE void undo();
-    Q_INVOKABLE void move_cursor(QString direction);
-    Q_INVOKABLE void move_cursor(QString direction, QString type);
+    //FileManagerPlugin methods
+    Q_INVOKABLE void save();
+    Q_INVOKABLE void browse_files();
+    Q_INVOKABLE void load(QString value);
+    Q_INVOKABLE void new_file();
+
+    Q_INVOKABLE void show_recent_cache();
+    Q_INVOKABLE void clear_presentation_widget();
 
     void updatePresentationWidget();
-
-    void delete_content(QTextCursor::MoveOperation);
 
     void setDocumentPath(QString configuredPath);
 
@@ -92,28 +82,17 @@ private:
     void saveCurrentVersion();
     void saveContentsTo(QString filepath);
 
-    bool isContextValidForPrediction(std::string context);
-
     QString getRecentCache();
     QString getContentsFrom(QString filepath);
 
     QSettings *settings;
 
-    DWPTextEdit *presentationWidget;
+    QTextEdit *presentationWidget;
 
     IBrowserLevel *rootLevel;
 
-    bool autosave;
-
     QString documentPath;
-
-#ifdef SCASE1_PLUGIN_DOCUMENTWRITER_PREDICTION_ENABLED
-    int predictedItemsAdded;
-    std::string presageStdContext;
-    DWPPresageCallback presageCallback;
-    Presage presage;
-#endif
 
 };
 
-#endif // DOCUMENTWRITERPLUGIN_H
+#endif // FILEMANAGERPLUGIN_H

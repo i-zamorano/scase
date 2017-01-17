@@ -1,0 +1,13 @@
+<item name='ARCHIVOS'>
+	<level>
+		<item name='GUARDAR ESCRITO ACTUAL'>
+			<action>save</action>
+		</item>
+		<item name="RECUPERAR">
+			<action>browse_files</action>
+		</item>
+		<item name="NUEVO">
+			<action>new_file</action>
+		</item>
+	</level>
+</item>

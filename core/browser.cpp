@@ -39,7 +39,8 @@ void Browser::setup() {
     rootLevel->setIsStop(true);
 
     BrowserItem *ringBellItem = new BrowserItem(this);
-    ringBellItem->setAction(SCASE1_MODULE_BROWSER, "ring_bell");
+    ringBellItem->setModule(SCASE1_MODULE_BROWSER);
+    ringBellItem->setAction("ring_bell");
     ringBellItem->setPresentationData("SONAR ALARMA");
     rootLevel->insertItem(ringBellItem);
 
@@ -115,13 +116,13 @@ void Browser::executeItem() {
             } else {
                 if (currentItem->hasAction()) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
-                    qDebug() << "Browser:executeItem:hasAction:" << currentItem->getActionModule() << "," << currentItem->getActionName();
+                    qDebug() << "Browser:executeItem:hasAction:" << currentItem->getModule() << "," << currentItem->getActionName();
 #endif
-                    if (currentItem->getActionModule() == SCASE1_MODULE_BROWSER) {
+                    if (currentItem->getModule() == SCASE1_MODULE_BROWSER) {
                         QMetaObject::invokeMethod(this, currentItem->getActionName().toLatin1().constData());
                         actionDidFinish();
                     } else {
-                        emit executeActionFromPlugin(currentItem->getActionModule(), currentItem->getActionName());
+                        emit executeActionFromPlugin(currentItem->getModule(), currentItem->getActionName());
                     }
                 }
             }
@@ -234,6 +235,12 @@ void Browser::updatePresentationDelegate() {
                 presentationDelegate->setPresentationData(QString::fromUtf8("ERROR: No hay información disponible"), false);
             } else {
                 presentationDelegate->setPresentationData(currentItem->getPresentationData(), currentItem->isSpecial());
+                if (currentItem->hasFeedback()) {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+                    qDebug() << "Browser:updatePresentationDelegate:hasFeedback:" << currentItem->getModule() << "," << currentItem->getFeedbackName();
+#endif
+                    emit executeFeedbackFromPlugin(currentItem->getModule(), currentItem->getFeedbackName());
+                }
             }
         } else if (navigationStatus == BROWSER_PSEUDOITEM_UP_ONE_LEVEL) {
             presentationDelegate->setPresentationData(QString::fromUtf8("VOLVER AL MENÚ ANTERIOR"), false);
@@ -303,35 +310,46 @@ BrowserItem *Browser::readDeploymentTree(const QString pluginName, const QString
 BrowserItem *Browser::readDeploymentItem(const QString pluginName, QDomElement currentElement) {
     BrowserItem *currentItem = new BrowserItem(this);
 
+    currentItem->setModule(pluginName);
     currentItem->setPresentationData(currentElement.attribute("name", "-- FALTA INFORMACIÓN --"));
 
     QDomElement childElement = currentElement.firstChildElement();
 
-    if (childElement.tagName() == "action") {
-        currentItem->setAction(pluginName, childElement.text());
-    } else if (childElement.tagName() == "level") {
-        BrowserLevel *newLevel = new BrowserLevel(currentItem);
-        QDomElement levelElement = childElement.firstChildElement();
-        while (!levelElement.isNull()) {
-            if (levelElement.tagName() == "item") {
-                BrowserItem *newItem = readDeploymentItem(pluginName, levelElement);
-                if (newItem != NULL) {
-                    newLevel->insertItem(newItem);
-                    newItem->setParent(newLevel);
+    for (; !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "Browser::readDeploymentItem: tagname found" << childElement.tagName() << "in plugin" << pluginName;
+#endif
+        if (childElement.tagName() == "action") {
+            currentItem->setAction(childElement.text());
+        } else if (childElement.tagName() == "feedback") {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+            qDebug() << "Browser::readDeploymentItem: found feedback" << childElement.text() << "in plugin" << pluginName;
+#endif
+            currentItem->setFeedback(childElement.text());
+        } else if (childElement.tagName() == "level") {
+            BrowserLevel *newLevel = new BrowserLevel(currentItem);
+            QDomElement levelElement = childElement.firstChildElement();
+            while (!levelElement.isNull()) {
+                if (levelElement.tagName() == "item") {
+                    BrowserItem *newItem = readDeploymentItem(pluginName, levelElement);
+                    if (newItem != NULL) {
+                        newLevel->insertItem(newItem);
+                        newItem->setParent(newLevel);
+                    }
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+                } else {
+                    qDebug() << "Browser::readDeploymentItem: level elements can contain items only, while traversing item" << currentItem->getPresentationData() << "in plugin" << pluginName;
+#endif
                 }
-#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
-            } else {
-                qDebug() << "Browser::readDeploymentItem: level elements can contain items only, while traversing item" << currentItem->getPresentationData() << "in plugin" << pluginName;
-#endif
+                levelElement = levelElement.nextSiblingElement();
             }
-            levelElement = levelElement.nextSiblingElement();
-        }
-        currentItem->setLevelBelow(newLevel);
-    } else {
+            currentItem->setLevelBelow(newLevel);
+        } else {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
-        qDebug() << "Browser::readDeploymentItem: item elements can contain level or action only, while traversing item" << currentItem->getPresentationData() << "in plugin" << pluginName;
+            qDebug() << "Browser::readDeploymentItem: item elements can contain level, action or feedback only, while traversing item" << currentItem->getPresentationData() << "in plugin" << pluginName;
 #endif
-        return NULL;
+            return NULL;
+        }
     }
 
     return currentItem;
@@ -342,8 +360,9 @@ void Browser::addItemToLevel(IBrowserLevel *levelDelegate, int pos, QString name
         BrowserItem *item = new BrowserItem(this);
         BrowserLevel *level = static_cast<BrowserLevel *>(levelDelegate);
 
+        item->setModule(moduleName);
         item->setPresentationData(name);
-        item->setAction(moduleName, actionName);
+        item->setAction(actionName);
         item->setIsSpecial(isSpecial);
 
         level->insertItem(item, pos);
@@ -371,7 +390,7 @@ void Browser::test() {
         if (item != NULL) {
             qDebug() << "item:" << item->getPresentationData();
             if (item->hasAction()) {
-                qDebug() << "has action:" << item->getActionModule() << ":" << item->getActionName();
+                qDebug() << "has action:" << item->getModule() << ":" << item->getActionName();
             } else if (item->hasLevelBelow()) {
                 qDebug() << "has one level below, going down";
                 testStack.push(currentLevel);

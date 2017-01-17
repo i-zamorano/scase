@@ -56,16 +56,31 @@ bool BrowserItem::hasAction() {
     return ((moduleName != NULL) && (actionName != NULL));
 }
 
-QString BrowserItem::getActionModule() {
-    return QString(*moduleName);
-}
-
 QString BrowserItem::getActionName() {
     return QString(*actionName);
 }
 
-void BrowserItem::setAction(const QString moduleName_, const QString actionName_) {
-    moduleName = new QString(moduleName_);
+void BrowserItem::setAction(const QString actionName_) {
     actionName = new QString(actionName_);
 }
 
+bool BrowserItem::hasFeedback() {
+    return ((moduleName != NULL) && (feedbackName != NULL));
+}
+
+QString BrowserItem::getModule() {
+    return QString(*moduleName);
+}
+
+void BrowserItem::setModule(const QString moduleName_)
+{
+    moduleName = new QString(moduleName_);
+}
+
+QString BrowserItem::getFeedbackName() {
+    return QString(*feedbackName);
+}
+
+void BrowserItem::setFeedback(const QString feedbackName_) {
+    feedbackName = new QString(feedbackName_);
+}

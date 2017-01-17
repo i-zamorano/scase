@@ -38,9 +38,14 @@ public:
     virtual QString getPresentationData() = 0;
     virtual void setPresentationData(const QString presentationData_) = 0;
 
-    virtual void setAction(const QString moduleName, const QString actionName) = 0;
-    virtual QString getActionModule() = 0;
+    virtual QString getModule() = 0;
+    virtual void setModule(const QString moduleName_) = 0;
+
+    virtual void setAction(const QString actionName) = 0;
     virtual QString getActionName() = 0;
+
+    virtual void setFeedback(const QString feedbackName) = 0;
+    virtual QString getFeedbackName() = 0;
 
     inline IBrowserLevel *getLevelBelow() { return levelBelow_; }
     inline void setLevelBelow(IBrowserLevel *levelBelow) { levelBelow_ = levelBelow; }

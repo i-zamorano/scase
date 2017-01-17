@@ -21,37 +21,19 @@
 
     **********/
 
-#ifndef PLUGINHANDLER_H
-#define PLUGINHANDLER_H
+#ifndef SCASE1_PLUGIN_FILEMANAGER_GLOBAL_H
+#define SCASE1_PLUGIN_FILEMANAGER_GLOBAL_H
 
-#include <QObject>
-#include <QHash>
-#include <QWidget>
-#include <QStackedWidget>
+#include <QtCore/qglobal.h>
 
-#include "interfaces/IPlugin.h"
+#if defined(SCASE1_PLUGIN_FILEMANAGER_LIBRARY)
+#  define SCASE1_PLUGIN_FILEMANAGERSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define SCASE1_PLUGIN_FILEMANAGERSHARED_EXPORT Q_DECL_IMPORT
+#endif
 
-#include "browser.h"
+#define SCASE1_PLUGIN_FILEMANAGER_NAME "net.adapar.SCASE1.plugins.FileManager/1.0"
+#define SCASE1_PLUGIN_FILEMANAGER_BROWSER_TREE_FILE "FileManager.browserTree"
+#define SCASE1_PLUGIN_FILEMANAGER_SETTINGS_FILE "FileManager"
 
-class PluginHandler : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit PluginHandler(QObject *parent = 0);
-
-    void registerPlugin(const QString pluginName, IPlugin *plugin, Browser *browser, QStackedWidget *container);
-    QWidget *getOutputWidgetFromPlugin(const QString pluginName);
-
-signals:
-
-public slots:
-    void invokeActionFromPlugin(const QString pluginName, const QString actionName);
-    void invokeFeedbackFromPlugin(const QString pluginName, const QString feedbackName);
-
-private:
-    QHash<QString, IPlugin *> directory;
-
-};
-
-#endif // PLUGINHANDLER_H
+#endif // SCASE1_PLUGIN_FILEMANAGER_GLOBAL_H

@@ -48,12 +48,18 @@ public:
     QString getPresentationData();
     void setPresentationData(const QString presentationData_);
 
-    void setAction(const QString moduleName, const QString actionName);
-    QString getActionModule();
+    QString getModule();
+    void setModule(const QString moduleName_);
+
+    void setAction(const QString actionName);
     QString getActionName();
+
+    void setFeedback(const QString feedbackName);
+    QString getFeedbackName();
 
     // BrowserItem members
     bool hasAction();
+    bool hasFeedback();
 
     BrowserLevel *getLevelBelow();
     void setLevelBelow(BrowserLevel *levelBelow);
@@ -71,6 +77,7 @@ private:
 
     QString *moduleName;
     QString *actionName;
+    QString *feedbackName;
 
     IPlugin *pluginDelegate;
 
