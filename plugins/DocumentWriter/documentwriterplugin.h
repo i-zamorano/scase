@@ -62,7 +62,8 @@ public:
     void hide();
 
 signals:
-    void requestTransition(const QString serviceName, const QString command, QVariant payload);
+    void requestService(const QString serviceName, const QString command, QVariant payload);
+    void requestTransition(const QString serviceName);
 
 protected slots:
     void textHasChanged();

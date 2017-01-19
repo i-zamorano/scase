@@ -99,6 +99,11 @@ void FileManagerPlugin::setDocumentPath(QString configuredPath) {
 #endif
 }
 
+QString FileManagerPlugin::getSavedDocumentsPath()
+{
+    return QDir::toNativeSeparators(QString("%1saved").arg(documentPath));
+}
+
 QString FileManagerPlugin::getRecentCache() {
     return getContentsFrom(getRecentCacheFilename());
 }
@@ -321,8 +326,8 @@ void FileManagerPlugin::save()
 {
     QDate currentDate = QDate::currentDate();
 
-    QString path = QDir::toNativeSeparators(QString("%1saved").arg(documentPath));
-    QString filename = QString("saved-%1%2%3-%4.txt").arg(currentDate.toString("yyyy"), currentDate.toString("MM"), currentDate.toString("dd"), QTime::currentTime().toString("HHmmss"));
+    QString path = getSavedDocumentsPath();
+    QString filename = QString("%1%2%3-%4.txt").arg(currentDate.toString("yyyy"), currentDate.toString("MM"), currentDate.toString("dd"), QTime::currentTime().toString("HHmmss"));
     QString filepath = QDir::toNativeSeparators(QString("%1/%2").arg(path, filename));
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
@@ -336,14 +341,17 @@ void FileManagerPlugin::save()
 
     saveContentsTo(filepath);
 
-    emit requestTransition("editor", "set_content", QVariant(presentationWidget->toPlainText()));
+    emit requestService("editor", "set_content", QVariant(presentationWidget->toPlainText()));
 }
 
-void FileManagerPlugin::load(QString value)
+void FileManagerPlugin::load(QString filename)
 {
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "load:" << value;
+    qDebug() << "load:" << filename;
 #endif
+
+    emit requestService("editor", "set_content", QVariant(presentationWidget->toPlainText()));
+    emit requestTransition("editor");
 }
 
 void FileManagerPlugin::new_file()
@@ -351,7 +359,7 @@ void FileManagerPlugin::new_file()
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "new_file:";
 #endif
-    emit requestTransition("editor", "set_content", QVariant(""));
+    emit requestService("editor", "set_content", QVariant(""));
 }
 
 void FileManagerPlugin::show_recent_cache()

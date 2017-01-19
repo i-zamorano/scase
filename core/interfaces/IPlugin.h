@@ -55,7 +55,8 @@ public:
     inline void setBrowserDelegate(IBrowserDelegate *delegate) { browserDelegate = delegate; }
 
 signals:
-    virtual void requestTransition(const QString serviceName, const QString command, QVariant payload) = 0;
+    virtual void requestService(const QString serviceName, const QString command, QVariant payload) = 0;
+    virtual void requestTransition(const QString serviceName) = 0;
 
 protected:
     IBrowserItem *browserItemDelegate;

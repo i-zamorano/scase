@@ -57,7 +57,8 @@ public:
     void hide();
 
 signals:
-    void requestTransition(const QString serviceName, const QString command, QVariant payload);
+    void requestService(const QString serviceName, const QString command, QVariant payload);
+    void requestTransition(const QString serviceName);
 
 protected slots:
 
@@ -70,7 +71,7 @@ private:
     //FileManagerPlugin methods
     Q_INVOKABLE void save();
     Q_INVOKABLE void browse_files();
-    Q_INVOKABLE void load(QString value);
+    Q_INVOKABLE void load(QString filename);
     Q_INVOKABLE void new_file();
 
     Q_INVOKABLE void show_recent_cache();
@@ -80,6 +81,7 @@ private:
 
     void setDocumentPath(QString configuredPath);
 
+    QString getSavedDocumentsPath();
     QString getRecentCacheFilename();
 
     void saveRecentCache();
