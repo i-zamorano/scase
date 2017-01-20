@@ -79,6 +79,9 @@ void InteractionWidget::block()
 
 void InteractionWidget::unblock()
 {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+    qDebug() << "InteractionWidget::unblock";
+#endif
     isBlocked = false;
 }
 
@@ -93,10 +96,7 @@ void InteractionWidget::enterEvent(QEvent *) {
 }
 
 void InteractionWidget::leaveEvent(QEvent *) {
-    bool unblockLater = false;
-
     if (!isBlocked) {
-        block();
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
         qDebug() << "InteractionWidget::leaveEvent has been called [begin]";
 #endif
@@ -104,12 +104,17 @@ void InteractionWidget::leaveEvent(QEvent *) {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
             qDebug() << "InteractionWidget::leaveEvent has been called with an activation";
 #endif
-            unblockLater = true;
+            block();
+
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "InteractionWidget::leaveEvent unblocking later > " << QString::number(refractoryPeriod);
+#endif
+            QTimer::singleShot(refractoryPeriod, this, SLOT(unblock()));
 
             emit activated();
         } else {
 #ifdef SCASE1_DEBUG_LEVEL_VERBOSE
-            qDebug() << "InteractionWidget::leaveEvent has been called with an pass";
+            qDebug() << "InteractionWidget::leaveEvent has been called with a pass";
 #endif
             emit userHasLeft();
         }
@@ -123,9 +128,14 @@ void InteractionWidget::leaveEvent(QEvent *) {
     progressBar->setValue(0);
     runningActivationTime = 0;
 
-    if (unblockLater) {
-        QTimer::singleShot(refractoryPeriod, this, SLOT(unblock()));
+    if (isBlocked) {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "InteractionWidget::leaveEvent trying to unblock but we are blocked, should NOT unblock!";
+#endif
     } else {
+#ifdef SCASE1_DEBUG_LEVEL_VERBOSE
+        qDebug() << "InteractionWidget::leaveEvent unblocking now";
+#endif
         unblock();
     }
 }
