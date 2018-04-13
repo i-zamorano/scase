@@ -1,14 +1,10 @@
 <item name='ARCHIVOS'>
 	<level>
-		<item name='GUARDAR ESCRITO ACTUAL'>
-			<action>save</action>
-			<feedback>show_recent_cache</feedback>
-		</item>
-		<item name="RECUPERAR">
+		<item name="ABRIR ARCHIVO">
 			<action>browse_files</action>
 			<feedback>clear_presentation_widget</feedback>
 		</item>
-		<item name="NUEVO">
+		<item name="NUEVO ARCHIVO">
 			<action>new_file</action>
 			<feedback>clear_presentation_widget</feedback>
 		</item>
