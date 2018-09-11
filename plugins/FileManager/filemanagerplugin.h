@@ -73,9 +73,11 @@ private:
     Q_INVOKABLE void browse_files();
     Q_INVOKABLE void load(QString filename);
     Q_INVOKABLE void new_file();
-
     Q_INVOKABLE void show_recent_cache();
+    Q_INVOKABLE void read_recent_cache();
     Q_INVOKABLE void clear_presentation_widget();
+    Q_INVOKABLE void clear_created_files();
+    Q_INVOKABLE void write(QString value, QString repetitions = "1");
 
     void updatePresentationWidget();
 
@@ -96,8 +98,11 @@ private:
     QTextEdit *presentationWidget;
 
     IBrowserLevel *rootLevel;
+    IBrowserLevel *filesLevel;
 
     QString documentPath;
+
+    int filesAdded;
 
 };
 

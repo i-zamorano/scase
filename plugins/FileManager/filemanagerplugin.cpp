@@ -43,6 +43,8 @@
 #include <QtCore/qmath.h>
 #include <QTextCharFormat>
 #include <QColor>
+#include <QFileInfo>
+#include <QGraphicsDropShadowEffect>
 
 #include <locale>
 
@@ -52,6 +54,7 @@ FileManagerPlugin::FileManagerPlugin()
 
     browserItemDelegate = NULL;
     rootLevel = NULL;
+    filesLevel = NULL;
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "FileManagerPlugin::FileManagerPlugin:pluginDirPath?" << getPluginPath();
@@ -67,6 +70,8 @@ FileManagerPlugin::FileManagerPlugin()
     presentationWidget->setUndoRedoEnabled(true);
     presentationWidget->ensureCursorVisible();
     presentationWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    filesAdded = 0;
 }
 
 void FileManagerPlugin::show(QStackedWidget *container) {
@@ -129,6 +134,7 @@ QString FileManagerPlugin::getContentsFrom(QString filepath) {
 void FileManagerPlugin::saveContentsTo(QString filepath) {
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "FileManagerPlugin::saveContentsTo:filename = " << filepath;
+    qDebug() << "FileManagerPlugin::saveContentsTo:text = " << presentationWidget->toPlainText();
 #endif
     QFile outputFile(filepath);
 
@@ -216,6 +222,10 @@ void FileManagerPlugin::setupOutputWidget() {
     presentationWidget->setReadOnly(true);
 
     setDocumentPath(configuredPath);
+
+    presentationWidget->setText(getRecentCache());
+
+//    browse_files();
 }
 
 QString FileManagerPlugin::getPluginPath() {
@@ -346,9 +356,71 @@ void FileManagerPlugin::save()
 
 void FileManagerPlugin::load(QString filename)
 {
+    presentationWidget->setText("");
+
+//    Obtener ruta del archivo antiguo...
+    QString path = QString("%1path.txt").arg(documentPath);
+    QString filepath = QDir::toNativeSeparators(QString("%1").arg(path));
+    QString old_path = "";
+    QFile inOldFile(filepath);
+
+    if (inOldFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&inOldFile);
+        old_path = in.readAll();
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "load:" << filename;
+    } else {
+        qDebug() << "FileManagerPlugin::getContentsFrom:could not open file for reading";
+    }
+#else
+    }
 #endif
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "Path:" << old_path;
+#endif
+//    Actualizar contenido del archivo antiguo...
+    presentationWidget->setText(getRecentCache());
+    saveContentsTo(old_path);
+
+//    Actualizar nombre del archivo cargado...
+    QFile outputFile(filepath);
+
+    if (outputFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QTextStream out(&outputFile);
+        out << filename;
+        outputFile.flush();
+        outputFile.close();
+    } else {
+        qDebug() << "FileManagerPlugin::saveContentsTo:could not open file for saving";
+    }
+
+//    Actualizar texto del archivo cargado...
+    QFile inFile(filename);
+    QString new_content = "";
+
+    if (inFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream in(&inFile);
+        new_content = in.readAll();
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    } else {
+        qDebug() << "FileManagerPlugin::getContentsFrom:could not open file for reading";
+    }
+#else
+    }
+#endif
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "Read:" << new_content;
+#endif
+
+    presentationWidget->setText(new_content);
+
+    path = getRecentCacheFilename();
+    filepath = QDir::toNativeSeparators(QString("%1").arg(path));
+
+    saveContentsTo(filepath);
+
+    updatePresentationWidget();
 
     emit requestService("editor", "set_content", QVariant(presentationWidget->toPlainText()));
     emit requestTransition("editor");
@@ -359,6 +431,25 @@ void FileManagerPlugin::new_file()
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "new_file:";
 #endif
+    QDate currentDate = QDate::currentDate();
+
+    QString path = getSavedDocumentsPath();
+    QString filename = QString("%1 de %2 de %3 - %4.txt").arg(currentDate.toString("dd"), currentDate.toString("MMMM"), currentDate.toString("yyyy"), QTime::currentTime().toString("HHmmss"));
+    QString filepath = QDir::toNativeSeparators(QString("%1/%2").arg(path, filename));
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "FileManagerPlugin::save:currentPath?" << QDir::currentPath();
+    qDebug() << "FileManagerPlugin::save:path?" << path;
+    qDebug() << "FileManagerPlugin::save:filename?" << filename;
+#endif
+
+    QDir dir(QDir::currentPath());
+    dir.mkpath(filepath);
+
+    load(filepath);
+
+    browserDelegate->goToLevel(rootLevel);
+
     emit requestService("editor", "set_content", QVariant(""));
 }
 
@@ -367,20 +458,107 @@ void FileManagerPlugin::show_recent_cache()
     presentationWidget->setText(getRecentCache());
 }
 
+void FileManagerPlugin::read_recent_cache()
+{
+    show_recent_cache();
+//    presentationWidget->
+//    browserDelegate->addLevel(rootLevel->getContainer());
+//    browserDelegate->addItemToLevel(rootLevel->getContainer()->getLevelBelow(), 0, "DETENER AUDIO", "audio", "", false);
+
+//    browserPresentationDelegate->setTextToSpeech("Hola hola hola");
+
+//    m_speech = new QTextToSpeech(this);
+
+//    if (data.length() > 0) {
+//        m_speech->say("Hola hola hola");
+//    }
+
+//    setPresentationData
+//    browserDelegate->addItemToLevel(rootLevel->getContainer()->getLevelBelow(), 0, "DETENER AUDIO", "DETENER AUDIO", "", false);
+//    browserDelegate->pause();
+}
+
 void FileManagerPlugin::clear_presentation_widget()
 {
     presentationWidget->setText("");
 }
 
+void FileManagerPlugin::clear_created_files()
+{
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << filesAdded;
+#endif
+
+    if (filesAdded > 0) {
+        if (filesLevel != NULL) {
+            for (int i = 0; i < filesAdded; i++) {
+                filesLevel->getContainer()->getLevelBelow()->removeItemAtPos(0);
+            }
+        }
+
+        filesAdded = 0;
+    }
+}
+
 void FileManagerPlugin::browse_files()
 {
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
-    qDebug() << "browse_files:";
+    qDebug() << "browse_files:" << getName();
 #endif
+
+    rootLevel->setContainer(browserItemDelegate);
+
+    if ( filesLevel != NULL) {
+        if (filesLevel->getContainer()->hasLevelBelow()) {
+            clear_created_files();
+        }
+    } else {
+        filesLevel = browserDelegate->addLevel();
+    }
+
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "new_level??:" << filesLevel->getContainer()->hasLevelBelow();
+#endif
+
+    QString path = getSavedDocumentsPath();
+    QDir dir(path);
+
+    int index = 0;
+
+    foreach (QFileInfo file, dir.entryInfoList()) {
+        if (file.fileName() != "" && file.fileName() != "." && file.fileName() != "..") {
+            browserDelegate->addItemToLevel(filesLevel, index, file.fileName(), getName(), QString("load,%1").arg(path + "/" + file.fileName()), true);
+            index++;
+            filesAdded++;
+            qDebug() << file.fileName();
+        }
+    }
 }
 
-void FileManagerPlugin::updatePresentationWidget() {
+void FileManagerPlugin::updatePresentationWidget()
+{
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
     qDebug() << "updatePresentationWidget: start";
 #endif
+
+    qDebug() << documentPath;
+}
+
+// Borrar contenido de presentación al crear un nuevo archivo
+void FileManagerPlugin::write(QString value, QString repetitions) {
+#ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
+    qDebug() << "value:" << value;
+    qDebug() << "repetitions:" << repetitions;
+#endif
+
+    int total = repetitions.toInt();
+
+    if (total > 0) {
+        QTextCursor cursor = presentationWidget->textCursor();
+        cursor.clearSelection();
+        for (int i = 0; i < total; i++) {
+            cursor.insertText(value);
+        }
+        updatePresentationWidget();
+    }
 }

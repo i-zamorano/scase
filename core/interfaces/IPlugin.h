@@ -32,6 +32,7 @@
 
 #include "interfaces/IBrowserItem.h"
 #include "interfaces/IBrowserDelegate.h"
+#include "interfaces/IBrowserPresentationDelegate.h"
 
 class IPlugin {
 
@@ -53,6 +54,7 @@ public:
     inline void setUserPath(QString userPath_) { userPath = userPath_; }
     inline void setBrowserItemDelegate(IBrowserItem *delegate) { browserItemDelegate = delegate; setBrowserItemDelegatePrivate(delegate); }
     inline void setBrowserDelegate(IBrowserDelegate *delegate) { browserDelegate = delegate; }
+    inline void setBrowserPresentationDelegate(IBrowserPresentationDelegate *delegate) { browserPresentationDelegate = delegate; }
 
 signals:
     virtual void requestService(const QString serviceName, const QString command, QVariant payload) = 0;
@@ -61,6 +63,7 @@ signals:
 protected:
     IBrowserItem *browserItemDelegate;
     IBrowserDelegate *browserDelegate;
+    IBrowserPresentationDelegate *browserPresentationDelegate;
 
     QString userPath;
 

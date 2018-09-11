@@ -34,7 +34,9 @@ public:
     virtual void addItemToLevel(IBrowserLevel *level, int pos, QString name, QString moduleName, QString actionName, bool isSpecial) = 0;
     virtual void goToLevel(IBrowserLevel *ilevel) = 0;
     virtual void actionDidFinish(IBrowserItem *item) = 0;
-
+    virtual IBrowserLevel *addLevel() = 0;
+    virtual void stopTansitions() = 0;
+    virtual void test() = 0;
 };
 
 #define IBROWSER_DELEGATE_SID "net.adapar.SCASE1.IBrowserDelegate/1.0"

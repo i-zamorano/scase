@@ -369,6 +369,19 @@ void Browser::addItemToLevel(IBrowserLevel *levelDelegate, int pos, QString name
     }
 }
 
+IBrowserLevel *Browser::addLevel()
+{
+    currentItem = currentLevel->getCurrentItem();
+    BrowserLevel *level = new BrowserLevel(static_cast<BrowserItem *>(currentItem));
+    currentItem->setLevelBelow(level);
+
+    return static_cast<BrowserLevel *>(level);
+}
+
+void Browser::stopTansitions() {
+
+}
+
 void Browser::ring_bell() {
     emit ringBellSignal();
 }

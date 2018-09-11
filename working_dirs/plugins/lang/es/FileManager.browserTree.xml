@@ -1,12 +1,149 @@
 <item name='ARCHIVOS'>
 	<level>
-		<item name="ABRIR ARCHIVO">
+		<item name='NUEVO ARCHIVO'>
+			<!-- <level>
+				<item name='ESPACIO'>
+					<action>write_special,space</action>
+				</item>
+				<item name='VOCALES SIN TILDE'>
+					<level>
+						<item name='A'>
+							<action>write,A</action>
+						</item>
+						<item name='E'>
+							<action>write,E</action>
+						</item>
+						<item name='I'>
+							<action>write,I</action>
+						</item>
+						<item name='O'>
+							<action>write,O</action>
+						</item>
+						<item name='U'>
+							<action>write,U</action>
+						</item>
+					</level>
+				</item>
+				<item name='BORRAR LETRA'>
+					<action>delete_previous_character</action>
+				</item>
+				<item name='CONSONANTES'>
+					<level>
+						<item name='B, C, CH, D, F, G'>
+							<level>
+								<item name="B">
+									<action>write,B</action>
+								</item>
+								<item name="C">
+									<action>write,C</action>
+								</item>
+								<item name="CH">
+									<action>write,CH</action>
+								</item>
+								<item name="D">
+									<action>write,D</action>
+								</item>
+								<item name="F">
+									<action>write,F</action>
+								</item>
+								<item name="G">
+									<action>write,G</action>
+								</item>
+							</level>
+						</item>
+						<item name="H, J, K, L, LL, M">
+							<level>
+								<item name="H">
+									<action>write,H</action>
+								</item>
+								<item name="J">
+									<action>write,J</action>
+								</item>
+								<item name="K">
+									<action>write,K</action>
+								</item>
+								<item name="L">
+									<action>write,L</action>
+								</item>
+								<item name="LL">
+									<action>write,LL</action>
+								</item>
+								<item name="M">
+									<action>write,M</action>
+								</item>
+							</level>
+						</item>
+						<item name="N, Ñ, P, Q, R, S">
+							<level>
+								<item name="N">
+									<action>write,N</action>
+								</item>
+								<item name="Ñ">
+									<action>write,Ñ</action>
+								</item>
+								<item name="P">
+									<action>write,P</action>
+								</item>
+								<item name="Q">
+									<action>write,Q</action>
+								</item>
+								<item name="R">
+									<action>write,R</action>
+								</item>
+								<item name="S">
+									<action>write,S</action>
+								</item>
+							</level>
+						</item>
+						<item name="T, V, W, X, Y, Z">
+							<level>
+								<item name="T">
+									<action>write,T</action>
+								</item>
+								<item name="V">
+									<action>write,V</action>
+								</item>
+								<item name="W">
+									<action>write,W</action>
+								</item>
+								<item name="X">
+									<action>write,X</action>
+								</item>
+								<item name="Y">
+									<action>write,Y</action>
+								</item>
+								<item name="Z">
+									<action>write,Z</action>
+								</item>
+							</level>
+						</item>
+						<item name='BORRAR LETRA'>
+							<action>delete_previous_character</action>
+						</item>
+					</level>
+				</item>
+			</level> -->
+			<action>new_file</action>
+			<!-- <feedback>clear_presentation_widget</feedback> -->
+		</item>
+		<item name='ABRIR ARCHIVO'>
+			<feedback>browse_files</feedback>
+		</item>
+		<item name='LEER ARCHIVO ACTUAL'>
+			<action>read_recent_cache</action>
+		</item>
+
+		<!-- <item name='GUARDAR ESCRITO ACTUAL'>
+			<action>save</action>
+			<feedback>show_recent_cache</feedback>
+		</item>
+		<item name="RECUPERAR">
 			<action>browse_files</action>
 			<feedback>clear_presentation_widget</feedback>
 		</item>
-		<item name="NUEVO ARCHIVO">
+		<item name="NUEVO">
 			<action>new_file</action>
 			<feedback>clear_presentation_widget</feedback>
-		</item>
+		</item> -->
 	</level>
 </item>

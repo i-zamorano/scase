@@ -57,8 +57,10 @@ public:
     void start(BrowserPresentationWidget *presentationDelegate_, int delay);
 
     virtual void addItemToLevel(IBrowserLevel *level, int pos, QString name, QString moduleName, QString actionName, bool isSpecial);
+    virtual IBrowserLevel *addLevel();
 
     void actionDidFinish(IBrowserItem *item = NULL);
+    void stopTansitions();
 
     inline void setPauseDelay(int delay) { pauseDelay = delay; }
 

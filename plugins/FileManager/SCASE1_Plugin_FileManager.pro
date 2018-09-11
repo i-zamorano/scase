@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 
-QT       += core widgets
+QT       += core widgets texttospeech
 
 TESTING_STATIC = NO
 
