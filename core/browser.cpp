@@ -34,6 +34,7 @@ Browser::Browser(QObject *parent) :
 
 void Browser::setup() {
     pauseDelay = 0;
+    itemPresentationTime = 0;
 
     rootLevel = new BrowserLevel(this);
     rootLevel->setIsStop(true);
@@ -55,6 +56,7 @@ void Browser::start(BrowserPresentationWidget *presentationDelegate_, int delay)
     presentationDelegate = presentationDelegate_;
     timer->setInterval(delay);
     setCurrentLevel(rootLevel);
+    itemPresentationTime = delay;
 }
 
 void Browser::stopTimer() {
@@ -232,7 +234,7 @@ void Browser::updatePresentationDelegate() {
     if (presentationDelegate != NULL) {
         if (navigationStatus == BROWSER_READ_FROM_TREE) {
             if (currentItem == NULL) {
-                presentationDelegate->setPresentationData(QString::fromUtf8("ERROR: No hay información disponible"), false);
+                presentationDelegate->setPresentationData(QString::fromUtf8("No hay información disponible"), false);
             } else {
                 presentationDelegate->setPresentationData(currentItem->getPresentationData(), currentItem->isSpecial());
                 if (currentItem->hasFeedback()) {
@@ -378,8 +380,12 @@ IBrowserLevel *Browser::addLevel()
     return static_cast<BrowserLevel *>(level);
 }
 
-void Browser::stopTansitions() {
+void Browser::startTansitions() {
+    timer->setInterval(itemPresentationTime);
+}
 
+void Browser::stopTansitions() {
+    timer->setInterval(-1);
 }
 
 void Browser::ring_bell() {

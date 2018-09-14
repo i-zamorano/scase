@@ -130,7 +130,12 @@
 			<feedback>browse_files</feedback>
 		</item>
 		<item name='LEER ARCHIVO ACTUAL'>
-			<action>read_recent_cache</action>
+			<level>
+				<item name="VOLVER">
+					<action>stop_audio</action>
+					<feedback>read_recent_cache</feedback>
+				</item>
+			</level>
 		</item>
 
 		<!-- <item name='GUARDAR ESCRITO ACTUAL'>

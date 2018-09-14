@@ -35,6 +35,7 @@ public:
     virtual void goToLevel(IBrowserLevel *ilevel) = 0;
     virtual void actionDidFinish(IBrowserItem *item) = 0;
     virtual IBrowserLevel *addLevel() = 0;
+    virtual void startTansitions() = 0;
     virtual void stopTansitions() = 0;
     virtual void test() = 0;
 };

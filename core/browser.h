@@ -60,6 +60,7 @@ public:
     virtual IBrowserLevel *addLevel();
 
     void actionDidFinish(IBrowserItem *item = NULL);
+    void startTansitions();
     void stopTansitions();
 
     inline void setPauseDelay(int delay) { pauseDelay = delay; }
@@ -101,6 +102,7 @@ private:
     BrowserPresentationWidget *presentationDelegate;
 
     int itemDelay;
+    int itemPresentationTime;
     QTimer *timer;
 
     int pauseDelay;

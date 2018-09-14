@@ -31,6 +31,7 @@
 #include <QSettings>
 #include <QtPlugin>
 #include <QTextEdit>
+#include <QTextToSpeech>
 
 #include "scase1_plugin_filemanager_global.h"
 
@@ -69,11 +70,11 @@ private:
     void setBrowserItemDelegatePrivate(IBrowserItem *delegate);
 
     //FileManagerPlugin methods
-    Q_INVOKABLE void save();
     Q_INVOKABLE void browse_files();
     Q_INVOKABLE void load(QString filename);
     Q_INVOKABLE void new_file();
     Q_INVOKABLE void show_recent_cache();
+    Q_INVOKABLE void stop_audio();
     Q_INVOKABLE void read_recent_cache();
     Q_INVOKABLE void clear_presentation_widget();
     Q_INVOKABLE void clear_created_files();
@@ -99,6 +100,7 @@ private:
 
     IBrowserLevel *rootLevel;
     IBrowserLevel *filesLevel;
+    QTextToSpeech *m_speech;
 
     QString documentPath;
 
