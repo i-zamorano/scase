@@ -413,7 +413,7 @@ void FileManagerPlugin::new_file()
     QDate currentDate = QDate::currentDate();
 
     QString path = getSavedDocumentsPath();
-    QString filename = QString("%1%2%3-%4.txt").arg(currentDate.toString("yyyy"), currentDate.toString("MM"), currentDate.toString("dd"), QTime::currentTime().toString("HHmmss"));
+    QString filename = QString("%1 de %2 - %3.txt").arg(currentDate.toString("dd"), currentDate.toString("MMM"), QTime::currentTime().toString("HHmmss"));
     QString filepath = QDir::toNativeSeparators(QString("%1/%2").arg(path, filename));
 
 #ifdef SCASE1_PLUGIN_DEBUG_LEVEL_VERBOSE
